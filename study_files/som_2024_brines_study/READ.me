@@ -1,0 +1,222 @@
+#######################################################################
+# READ.me last update: April 4, 2024 - Sanjoy M. Som                  |
+- Specific for som_2024_brines_study                                  |
+#######################################################################
+# INTRODUCTION                                                        |
+#######################################################################
+chEQWRk is a series of wrappers code around EQ3/6 designed to perform |
+Water:Rock reactions. "Study files" are built that call these wrappers|
+to solve specific problems. chEQWRk is designed to be as robust and   |
+flexible as possible, but you may encounter errors/bugs. Sorry. Thanks|
+for understanding that anticipating every contingency is next to      |
+impossible. EQ3/6 needs to be installed in the root directory.        |
+See installation guidelines.                                          |
+                                                                      |
+#######################################################################
+# KEY FILES                                                           |
+#######################################################################
+eq36python.py        : Function library that act on EQ3/6 input and   |
+                       output files.                                  |
+evaporation.py       : Creates brines.                                | 
+executor.py          : Program launcher.                              |
+plotcsv.py	         : Generates all the plots.                       | 
+saturation.py        : Saturates a fluid with salt                    |
+serpentinization.py  : Runs the W:R rock reaction.                    |
+study_files/som_2024_brines_study.py: study file for this study.      |
+                                                                      |
+#######################################################################
+# INITIAL CONSIDERATIONS                                              |
+#######################################################################
+1. Think first of the simulation you want to do. Doing so will allow  |
+   you to setup the water file correctly.                             |
+     -The water file is swmajp_mbn.3i in /input_files.                |
+     -In the 'suppress' category of the 3i file (line 115), check     |
+      whether to suppress or allow carbonate formation _during the    |
+      evaporation_. The minerals are Aragonite, Artinite, Calcite,    |
+      Dolomite, Huntite, Hydromagnesite, Lansfordite, Magnesite,      |
+      Nesquehonite. For all code options except 2, you want to        |
+      _allow_those minerals (put a star in front of them).            |
+2. If you're simulating water:rock reactions, do you allow            |
+   carbonates there?                                                  |
+   If so, put a star in front of SIDERITE, HYDROMAGNESITE, ARTINITE,  |
+   NESQUEHONITE, CALCITE, Calcite-SS, MAGNESITE, ARAGONITE, HUNTITE,  |
+   DOLOMITE,ORDERED, DOLOMITE,DISORDERED, DOLOMITE.                   |
+3. It's a good habit to clear everything (option 0) prior to running a|
+   set of computations. You can save your results at any time with    |
+   option 9, and load those saved files with option 1. Saved file are |
+   stored in the /saved_files folder.                                 |
+4. Feel free to mess with the source code to improve things. If you   | 
+   screw up and need to revert, the original .py files released at    |
+   manuscript publication are saved in /python_backup.                |
+                                                                      |
+#######################################################################
+# MANUSCRIPT FIGURE REPRODUCTION                                      |
+#######################################################################
+#A1# To generate Fig. 1A, either:                                     |
+  - Use option 1 to load 'pure_water_NaCl_sat', then select option 10 | 
+    and choose 'gH+' as your Y variable and 'Aw' as your X variable.  |
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Run option 3.                                                  |
+    c. Run option 8.                                                  |
+    d. Run option 10 and choose 'gH+' as your Y variable and 'Aw' as  |
+       your X variable.                                               |
+                                                                      |
+#A2# To generate Fig. 1B, either:                                     |
+ - Use option 1 to load 'surface_seawater_evaporation.zip', then      |
+   select option 10, and choose 'pH' as your Y variable and 'Aw' as   |
+   your X variable.                                                   |
+ - OR regenerate from scratch:                                        | 
+   a. In som_2024_brines_study.py, ensure that tophalf_evap (at or    |
+      near line 196 under option == 2) is set to                      |
+      'tophalf_mbn_pCO2.evap'.                                        |
+   b. Disable lower-case carbonates in the suppress list (which allows| 
+      them to form) in the seawater file (see 1. above), and run with |
+      option 2.                                                       |
+   c. Enable lower-case carbonates (which in the suppress list        |
+      suppresses them) in the seawater file (see 1. above), and run   |
+      with option 2.                                                  |
+   d. Run option 10, and choose 'pH as your Y variable and 'Aw' as    |
+      your X variable.                                                |
+                                                                      |
+#B# To generate Fig. 2, either                                        |
+  - Use option 1 to load 'evap_curve_and_brines.zip', then select     |
+    option 7, and choose either 'TCO2' or 'carbonates_out' as your Y  | 
+    variable and 'Aw' as your X variable.                             |
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Double-check that the seawater file                            |
+       (/input_files/swmajp_mbn.3i) has a * in front of lower-case    |
+       carbonates (see 1.).                                           |
+    c. Generate the brines with option 6, and ask to run the [s]et.   |
+    d. Run option 7.                                                  |
+    e. At the prompt, choose either 'TCO2' or 'carbonates_out' as your|
+       Y variable and 'Aw' as your X variable.                        |
+    f. Run option 7 again if desired.                                 |  
+                                                                      |
+#C# To generate Figs 3A, 4A, 5A, 5D, 6A, 6C, 8A, 8C, 8E, 9A, 10A, 10C |
+    ("carbonates allowed" cases), either:                             |
+  - Use option 1 to load 'Case1_withcarbonates_WR1', then for...      |
+      - Fig. 3A: Run option 10, then type 'H2,aq' as your Y variable  |
+        and 'Temp' as your X variable.                                |
+      - Fig. 4A: Run option 10, then type 'pH'    as your Y variable  |
+        and 'Temp' as your X variable.                                |
+      - Fig. 5A,D: Run option 11, and follow the prompts to remove    |
+                   carbonate minerals and salts.                      |
+      - Fig. 6A,C: Run option 12.                                     |
+      - Fig. 7A  : Run option 13.                                     |
+      - Fig. 8A,C,E: Run option 13.                                   |
+      - Fig. 9A: Run option 10, then type 'Aw' as your Y variable and |
+                'Temp' as your X variable.                            | 
+      - Fig. 10A: Run option 10, then type 'TFor' as your Y           | 
+                 variable and 'Temp' as your X variable.              |
+      - Fig. 10C: Run option 10, then type 'FORMIC ACID,aq' as your Y | 
+                 variable and 'Temp' as your X variable.              |
+   - OR regenerate from scratch:                                      |
+     a. Run option 0 to clear files.                                  |
+     b. Place a star (*) in front of carbonate minerals listed in 2.  |
+        above in the seawater file, found in /input_files.            |
+     c. ensure a star is still in front of carbonate minerals listed  |
+        in 1. above.                                                  |
+     d. Generate the brines and serpentinize with option 6, and ask to|
+        run the [s]et.                                                |
+     e. Run option 8 to transform the raw output files into csvs      |
+     f. Plot figures as above.                                        |
+                                                                      |
+#D# To generate Figs 3B, 4B, 5B, 5D, 6B, 6D, 8B, 8D, 8F, 9B, 10B, 10D |
+    ("carbonates suppressed" cases), either:                          |
+  - Use option 1 to load 'Case2_nocarbonates_WR1', then for...        |
+     - Fig. 3B, 4B, 5D, 6B, 6D, 7B, 8B, 8D, 8F, 9B, 10B: as above.    |
+     - Fig. 5C: Run option 10, then type 'MAGNETITE_out' as your Y    |
+                variable and 'Temp' as your X variable.               |
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Remove the star (*) in front of carbonate minerals listed in 2.|
+       above in the seawater file, found in /input_files.             |
+    c. ensure a star is in front of carbonate minerals listed in 1.   |
+       above.                                                         |
+    d. Generate the brines and serpentinize with option 6, and ask to |
+       run the [s]et.                                                 | 
+    e. Run option 8 to transform the raw output files into csvs.      |
+    f. Plot figures as #C#.                                           |
+                                                                      |
+#E# To generate Fig. 11A, 11C ("carbonates allowed" cases), either:   |
+  - Use option 1 to load either 'withcarbonates_WR0p5.zip or          |
+    'withcarbonates_WR10.zip', then                                   |
+      - Run option 10, then type 'H2,aq' as your Y variable and 'Temp'| 
+        as your X variable.                                           |
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Edit the WR_array variable in som_2024_brines_study.py in      | 
+       option 6 (at or near line 233) to either 0.1 or 10.            |
+    c. Place a star (*) in front of carbonate minerals listed in 2.   |
+       above in the seawater file, found in /input_files.             |
+    d. Ensure a star is still in front of carbonate minerals listed in| 
+       1. above.                                                      |
+    e. Generate the brines and serpentinize with option 6, and ask to | 
+       run the [s]et.                                                 |
+    f. Run option 8 to transform the raw output files into csvs.      |
+    e. Plot as in #C# above with 'H2,aq' as your Y variable and 'Temp'| 
+       as your X variable.                                            |
+                                                                      |
+#F# To generate Fig. 11B, 11D ("carbonates suppressed" cases), either:|
+  - Use option 1 to load either 'nocarbonates_WR0p5.zip or            |
+    'nocarbonates_WR10.zip', then                                     |
+      - Run option 10, then type 'H2,aq' as your Y variable and 'Temp'| 
+        as your X variable.                                           |                            
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Edit the WR_array variable in som_2024_brines_study.py in      | 
+       option 6 (at or near line 233) to either 0.1 or 10.            |
+    c. Remove the star (*) in front of carbonate minerals listed in 2.|
+       above in the seawater file, found in /input_files.             |
+    d. Ensure a star is still in front of carbonate minerals listed in| 
+       1. above.                                                      |
+    e. Generate the brines and serpentinize with option 6, and ask to |
+       run the [s]et.                                                 |
+    f. Run option 8 to transform the raw output files into csvs.      |
+    e. Plot as in #C# above with 'H2,aq' as your Y variable and 'Temp'| 
+       as your X variable.                                            |
+                                                                      |
+#######################################################################
+# MANUSCRIPT TABULAR DATA                                             |
+#######################################################################
+                                                                      |
+ - Table 2: The data in table 2 comes from the 6o files stored in the |
+   plotting_files/brine6o folder. They are extracted from the         |
+   "Numerical Composition of the Aqueous Solution" section of the 6o  |
+   file.                                                              |
+                                                                      |
+#######################################################################
+# OTHER REASONABLY USEFUL INFORMATION                                 |
+#######################################################################
+                                                                      |
+ - The reason to create a python wrapper code is to automatically     |
+   string EQ3 and EQ6 files, which is tedious if done manually. While |
+   the plots above are the end-product of the runs, the intermediary  |
+   files are also available:                                          |
+     - The files representing the brines as output of evaporation are |
+       in the output_files/ folder, and titled just_the_brine.        |
+     - The file that represents the brine reacting with rock at the   |
+       initial temperature (10C in this study) is also found in the   |
+       output_files/ folder as serp_10C.                              |
+     - The files that represent the result of serpentinization at the |
+       initial temperature and heated to 400C are in the              |
+       plotting_files/raw6o folder.                                   |
+     - The 6o files in the plotting_files/raw6o folder are the source |
+       data for the csvs in plotting_files/csvs                       |
+                                                                      |
+  - The colors chosen for the minerals (option 11) are hard-coded in  |
+    plotcsv.py. Twenty of them are listed there. To see what those    |
+    twenty colors are, set the visualize flag to 'True' in            |
+    study_files/som_2024_brines_study.py (line 255).                  |                                                       |
+                                                                      |
+  - Why is the code called chEQWRk? Well, it has a double-meaning.    |
+    First, it is read as "checkwork", implying that it can be used to | 
+    check the science that is presented by using it. A nod to open    |
+    science. Second, it also can mean 'C'onsiderable 'h'elp when      |
+    running 'EQ'3/6 for 'W'ater:'R'ock 'k'alculations.                |      
+#######################################################################
+# END of READ.me                                                      |
+#######################################################################
+
