@@ -1,7 +1,8 @@
 # INTRODUCTION                                                       
 
-chEQWRk is a series of wrappers code around EQ3/6 designed to perform Water:Rock reactions. "Study files" are built that call these wrappers to solve specific problems. chEQWRk is designed to be as robust and
-flexible as possible, but you may encounter errors/bugs. Sorry. Thanks for understanding that anticipating every contingency is next to impossible. EQ3/6 needs to be installed in the root directory. See installation guidelines.                                          
+chEQWRk is a series of wrappers code around EQ3/6 designed to perform batch Water:Rock reactions using the EQ3/6 geochemistry FORTRAN code (written by Tom Wolery). Output files can be easily converted to csv files, and plotting routines call these csv files to visualize results.
+
+"Study files" are built to call these wrappers to solve specific problems. EQ3/6 needs to be installed in the root directory. See installation guidelines.                                          
                                                                       
 # KEY FILES                                                           
 
@@ -59,16 +60,20 @@ a previous study as a template.
 Setting up Xwindow within Linux in Windows 11 is a bit tricky.         
 Here is one solution using XMing                                      
                                                                       
-WSL1: 
+_WSL1_: 
+
 in ~/.bashrc, ensure that DISPLAY is exported to localhost:     
 ```
 export DISPLAY=$localhost:0.0                                
 ```
                                                                       
 in /etc/ssh/sshd_config                                         
-ensure that X11Fowarding is set to yes                          
+ensure that X11Fowarding is set to yes    
+
+Launch X-window directly via the Xming app.
                                                                       
-WSL2: 
+_WSL2_: 
+
 in ~/.bashrc, export the DISPLAY as follows:                   
 ```
 export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0 
@@ -76,7 +81,9 @@ export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
                                                                       
 in /etc/ssh/sshd_config                                         
 ensure that X11Forarding is set to yes, and                     
-ensure that X11UseLocalHost is set to yes                       
+ensure that X11UseLocalHost is set to yes 
+
+Launch X-window via the Xlaunch app, and ensure "No Access Control" is selected.
                                                                       
 
 # END of READ.me                                                      
