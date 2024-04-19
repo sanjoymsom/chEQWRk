@@ -27,7 +27,7 @@ Click 'Get' and follow the prompts.
 Follow this Gist to install EQ3/6 on linux:                           
   https://gist.github.com/sanjoymsom/529d9100b75d5803a4be54903a759167 
                                                                       
-On April 4, 2014, EQ3/6 could be found at                            
+On April 4, 2024, EQ3/6 could be found at                            
   https://seaborg.llnl.gov/resources/geochemical-databases-modeling-codes
                                                                        
 An X-window is required to run the code in WSL. XMing is good:         
