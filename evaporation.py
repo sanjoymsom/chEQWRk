@@ -48,7 +48,6 @@ def evaporation(T,WR,xi,dxi,filename3i,tophalf,platform,db,cwdpath,\
     #drop minerals at the end of the run
     eq.edit_iopt_in_6i(filename6i,cwdpath,7,'Do it')
   #And run EQ6
-  sys.exit()
   conv=eq.run_eq(6,eqpath,cwdpath,filename6i,db,platform)
   return conv
 #######################################################################
