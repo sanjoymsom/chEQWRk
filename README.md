@@ -12,7 +12,12 @@ serpentinization.py  : Runs the W:R rock reaction.
 saturation.py        : Saturates water file with salt.                
 plotcsv.py	         : Generates all the plots.                        
 eq36python.py        : Function library that act on EQ3/6 input and output files.                                  
-Important            : Study-specific .py files are in study_files/ including study-specific READ.me files         
+Important            : Study-specific .py files are in study_files/ including study-specific READ.me files    
+
+# VERSION MAPPING
+
+v0.1.1 --> Som et al. 2024, Planetary Science Journal. DOI 10.3847/PSJ/ad42a1
+v0.2.0 --> Boden et al. 2025, Geobiology. DOI 
                                                                       
 
 # DEPENDENCIES                                                        
