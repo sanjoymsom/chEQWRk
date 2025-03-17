@@ -1,5 +1,5 @@
 #######################################################################
-# READ.me last update: April 4, 2024 - Sanjoy M. Som                 |
+# READ.me last update: March 17, 2025 - Sanjoy M. Som                 |
 # (for study-specific READ.me files, see study_files/)                |
 #                                                                     |
 #######################################################################
@@ -12,7 +12,11 @@ flexible as possible, but you may encounter errors/bugs. Sorry. Thanks|
 for understanding that anticipating every contingency is next to      |
 impossible. EQ3/6 needs to be installed in the root directory.        |
 See installation guidelines.                                          |
-                                                                      |
+#######################################################################
+# VERSION MAPPING TO PUBLICATIONS                                     |
+#######################################################################
+V0.1.1 --> Som et al. 2024                                            |
+v0.2.0 --> Boden et al. 2025 (back-compatible                         |
 #######################################################################
 # KEY FILES                                                           |
 #######################################################################
