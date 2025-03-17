@@ -1,0 +1,139 @@
+#######################################################################
+# READ.me last update: March 4, 2025 - Sanjoy M. Som                  |
+- Specific for boden_2025_phosphorus_study                            |
+#######################################################################
+# INTRODUCTION                                                        |
+#######################################################################
+chEQWRk is a series of wrappers code around EQ3/6 designed to perform |
+Water:Rock reactions. It is designed to be as robust as possible, but |
+you may encounter errors/bugs. Sorry. Thanks for understanding that   |
+anticipating every contingency is next to impossible. EQ3/6 needs to  |
+be installed in the root directory. See installation guidelines.      |
+                                                                      |
+#######################################################################
+# KEY FILES                                                           |
+#######################################################################
+executor.py          : Program launcher.                              |                            | 
+serpentinization.py  : Runs the W:R rock reaction.                    |
+plotcsv.py	         : Generates all the plots.                       | 
+eq36python.py        : Function library that act on EQ3/6 input and   |
+                       output files.                                  |
+                                                                      |
+#######################################################################
+# INITIAL CONSIDERATIONS                                              |
+#######################################################################
+1. Think first of the simulation you want to do. Doing so will allow  |
+   you to setup the water file correctly.                             |
+     -The water file is swmajp_tde.3i in /input_files.                |
+2. It's a good habit to clear everything (option 0) prior to running a|
+   set of computations. You can save your results at any time with    |
+   option 6, and load those saved files with option 1. Saved file are |
+   stored in the /saved_files folder.                                 |
+3. Feel free to mess with the source code to improve things. If you   | 
+   screw up and need to revert, the original .py files released at    |
+   manuscript publication are saved in /python_backup.                |
+                                                                      |
+#######################################################################
+# MANUSCRIPT FIGURE REPRODUCTION                                      |
+#######################################################################
+                                                                      |
+#A1# To generate Fig. 4A either:                                      |
+  - Use option 1 to load 'serp_WR0p2_and_1p0', then select option 7,  | 
+    type 'group' as your Y variable and 'Temp' as your X variable,    |
+    select option 3 to plot Phosphites                                |
+  - OR regenerate from scratch:                                       |
+    a. Run option 0 to clear files.                                   |
+    b. Run option 2.                                                  |
+    c. Run option 4.                                                  |
+    d. Run option 7 and proceed as above.                             |
+                                                                      |
+#A2# To generate Fig. 4B, either:                                     |
+ - Use option 1 to load 'serp_WR0p2_and_1p0', then select option 9,   |
+   type 'group' as your Numerator Y variable and 'Temp' as your X     |
+   variable, then select option 2 for Phosphates as the Numerator.    |
+   Next, type 'group' as your Denominator Y variable and 'Temp' as    |
+   your X variable, then selection option 3 for Phosphites as the     |
+   Denominator.                                                       |
+ - OR regenerate from scratch:                                        |
+    a. Run option 0 to clear files.                                   |
+    b. Run option 2.                                                  |
+    c. Run option 4.                                                  |
+    d. Run option 9 and proceed as above.                             |
+                                                                      |
+#B# To generate Fig. S4A, either                                      |
+  - Use option 1 to load 'serp_WR0p2_and_1p0_mbn'                     |
+    - Navigate to the plotting_files folder, for example with the     |
+      command 'cd plotting_files'                                     |
+    - overwrite the mineral.colors file with mineral.colors.S2A file, |---
+      for example with the command 'cp mineral.colors.S4A mineral.colors'|
+    - Run option 10. Fig S4A will be the second plot generated (WR=1) |---
+  - OR generate from scratch:                                         |     
+     a. Edit the file boden_2025_phosphorus_study.py in the folder    |
+        study_files/boden_2025_phosphorus_study/ by removing the      |
+        comment (#) that begins line 34 to enable                     |
+           serp_db = 'mbn'                                            |
+        This tells the code to use the mbn database.                  |
+     b. Run option 0 to clear files.                                  |
+     c. Run option 2.                                                 |
+     d. Run option 4.                                                 |
+     e. Run option 9, type 'group', and follow the prompts.           |
+                                                                      |
+#C# To generate Fig. S4B, either                                      |
+  - Use option 1 to load 'serp_WR0p2_and_1p0'                         |
+    - Navigate to the plotting_files folder, for example with the     |
+      command 'cd plotting_files'                                     |
+    - overwrite the mineral.colors file with mineral.colors.S4A file, |---
+      for example with the command 'cp mineral.colors.S4B mineral.colors'|
+    - Run option 10. Fig S4B will be the second plot generated (WR=1) |---
+  - OR generate from scratch:                                         |
+     a. Edit the file boden_2025_phosphorus_study.py in the folder    |
+        study_files/boden_2025_phosphorus_study/ by commenting        |
+        line 34 by placing # in front:                                |
+           #serp_db = 'mbn'                                           |
+        This tells the code to use the tde database as enabled on     |
+        line 33.                                                      |
+     b. Run option 0 to clear files.                                  |
+     c. Run option 2.                                                 |
+     d. Run option 4.                                                 |
+     e. Run option 9, type 'group', and follow the prompts.           |
+                                                                      |
+#E# To generate Fig. 5 either:                                        |
+  - Use option 1 to load 'full_ternary_wP_300C_0p2', then select      |
+    option 11.                                                        |
+    - Follow the prompts carefully to select what to plot.            |
+  - OR regenerate from scratch (caution: can take some time):         |
+    a. Run option 0 to clear files.                                   |
+    b. Run option 3. [~3hr40 on laptop (2020 i7 processor)]           |
+    c. Run option 4. [~25 mins]                                       |
+    d. Run option 5. [~9 mins]                                        |
+    d. Run option 11. Follow the prompts carefully to select the plot.|
+       - Figs. a,b,c are in log scale.                                |
+       - Fig. d is in linear scale.                                   |                                                                  
+#######################################################################
+# MANUSCRIPT TABULAR DATA                                             |
+#######################################################################
+                                                                      |
+ - N/A                                                                |
+                                                                      |
+#######################################################################
+# OTHER REASONABLY USEFUL INFORMATION                                 |
+#######################################################################
+                                                                      |
+ - The reason to create a python wrapper code is to automatically     |
+   string EQ3 and EQ6 files, which is tedious if done manually. While |
+   the plots above are the end-product of the runs, the intermediary  |
+   files are also available:                                          |
+     - The files that represent the result of serpentinization are in |
+       are in the plotting_files/raw6o folder.                        |
+     - The 6o files in the plotting_files/raw6o folder are the source |
+       data for the csvs in plotting_files/csvs                       |
+                                                                      |
+  - Why is the code called chEQWRk? Well, it has a double-meaning.    |
+    First, it is read as "checkwork", implying that it can be used to | 
+    check the science that is presented by using it. A nod to open    |
+    science. Second, it also can mean 'C'onsiderable 'h'elp when      |
+    running 'EQ'3/6 for 'W'ater:'R'ock 'k'alculations.                |      
+#######################################################################
+# END of READ.me                                                      |
+#######################################################################
+

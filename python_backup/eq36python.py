@@ -22,6 +22,7 @@ def peridotite_in6i(RC,path,filename,OLIVINE,OLI_pure_mineral):
   #check rock composition is 100%. % is weight percent
   if abs(sum([x for x in RC]) - 100.0) > 1e-5:
     print('Error: rock composition does not add to 100%. Quitting.')
+    print(RC)
     sys.exit()
   #Check state of Olivine and enter mineral data:
   if OLI_pure_mineral:
@@ -130,11 +131,25 @@ def edit_in6i(string,newval,path,element,filename):
             newval = '%.5E'%newval
             newline = line[0:28]+newval+line[39:]
          elif element == 'dxixi':
-            newval = '%.5E'%newval
+            newval = '%.5E'%float(newval)
             newline = line[0:33]+newval+line[45:]
          elif element == 'co2gas':
             newval = '%.6E'%newval
             newline = line[0:27]+newval+line[39:]
+         elif element == 'reactant':
+            newname = newval[:-4]
+            spaces = ' '*(24-len(newname))
+            newline = line[0:18]+newname+spaces+line[42:]
+         elif element == 'moles':
+            newval = '%.5E'%float(newval)
+            newline = line[0:31]+newval+line[42:]
+         elif element == 'endmember':
+            newname = newval[:-9]
+            spaces = ' '*(22-len(newname))
+            newline = line[0:6]+newname+spaces+line[28:]
+         elif element == 'endmember_value':
+            newval = '%.5E'%float(newval)
+            newline = line[0:30]+newval+line[41:]
 
          else:
             print('Couldnt find requested 6i element during edit.')
@@ -151,13 +166,17 @@ def findline_in36o(string,path,filename,EndFileSignal=True):
     num_lines = sum(1 for line in open(path+filename))
     #important that this is a REVERSED search!
     for line in reversed(open(path+filename).readlines()):
-      if line.startswith(string):
+      #if line.startswith(string):
+      if string in line:
          break
       else:
         num_lines=num_lines-1
     if num_lines == 0 and EndFileSignal:
-      print('error in '+filename)
-      print('findline_in36o failed. Check your string: '+string)
+      if 'Grand Summary' in string:
+         pass #do nothing because solids may not exist
+      else:
+        print('error in '+filename)
+        print('findline_in36o failed. Check your string: '+string)
     return num_lines
 
 def findvar_in36o(string,path,element,filename):
@@ -244,6 +263,18 @@ def stitch(f1,f2,f3):
     cmd = ('cat '+f2+' '+f1[:-2]+weq+'p'+' > '+f3)
     os.system(cmd)
 
+def remove_tophalf(path,filename,newfilename):
+    string='* Start of the bottom'
+    num_line = findline_in36o(string,path,filename)
+    lines = open(path+filename).readlines()
+    open(newfilename, 'w').writelines(lines[num_line-1:])
+
+def remove_bottomhalf(path,filename,newfilename):
+    string='* Start of the bottom'
+    num_line = findline_in36o(string,path,filename)
+    lines = open(path+filename).readlines()
+    open(newfilename, 'w').writelines(lines[:num_line-1])
+
 def actcoefmodel_in36i(filename,path,model):
     '''
     Change activity coefficient model:
@@ -270,7 +301,7 @@ def actcoefmodel_in36i(filename,path,model):
     cmd = ('cp text.temp '+filename)
     os.system(cmd)
 
-def convert_pitz2bdot(filename,cwdpath):
+def convert_pitz2bdot(filename,cwdpath,serp_db):
   '''
   Converts a eq3 file from pitzer to bdot
   '''
@@ -278,11 +309,17 @@ def convert_pitz2bdot(filename,cwdpath):
   efs = False #EndFileSignal flag
   _swapvarname_in6i(filename,cwdpath,'|Ca++','|Ca+2',efs)
   _swapvarname_in6i(filename,cwdpath,'|Mg++','|Mg+2',efs)
-  _swapvarname_in6i(filename,cwdpath,'|Fe++','|Fe+2',efs)
-  _swapvarname_in6i(filename,cwdpath,'|O2(aq)','|O2,aq ',efs)
-  _swapvarname_in6i(filename,cwdpath,'|H2(aq)','|H2,aq ',efs)
-  _swapvarname_in6i(filename,cwdpath,'|SiO2(aq)','|SiO2,aq ',efs)
-  _swapvarname_in6i(filename,cwdpath,'|CO2(g)','|CO2,g ',efs)
+  _swapvarname_in6i(filename,cwdpath,'|Fe++ ','|Fe+2 ',efs)
+  _swapvarname_in6i(filename,cwdpath,'|Fe+++','|Fe+3 ',efs)
+  if serp_db == 'mbn':
+    _swapvarname_in6i(filename,cwdpath,'|O2(aq)','|O2,aq ',efs)
+    _swapvarname_in6i(filename,cwdpath,'|H2(aq)','|H2,aq ',efs)
+    _swapvarname_in6i(filename,cwdpath,'|SiO2(aq)','|SiO2,aq ',efs)
+    _swapvarname_in6i(filename,cwdpath,'|CO2(g)','|CO2,g ',efs)
+  elif serp_db == 'tde':
+    _swapvarname_in6i(filename,cwdpath,'|O2(aq)','|O2,AQ ',efs)
+    _swapvarname_in6i(filename,cwdpath,'|H2(aq)','|H2,AQ ',efs)
+    _swapvarname_in6i(filename,cwdpath,'|SiO2(aq)','|SiO2,AQ ',efs)
   _swap_case_in6i(filename,cwdpath,'|Dolomite','upper',efs)
   _swap_case_in6i(filename,cwdpath,'|Halite','upper',efs)
   _swap_case_in6i(filename,cwdpath,'|Hematite','upper',efs)
@@ -387,6 +424,12 @@ def generate_tablefrom6o(process,cwdpath,eqpath,raw6opath,
       with open(cwdpath+'block.temp','w') as out:
         for lines in block:
           out.write(lines)
+      #skip block if discontinuity detected
+      with open(cwdpath+'block.temp', 'r') as out:
+        skip = any('discontinuity' in line for line in out)
+        if skip:
+          iter = iter+1
+          continue
       #extract xi
       with open(cwdpath+'block.temp','r') as out:
         first_line = out.readline()
@@ -407,9 +450,17 @@ def generate_tablefrom6o(process,cwdpath,eqpath,raw6opath,
             TDS_perc = float(line.split()[2])*100.
           if line.startswith('                       Solvent mass'):
             Solvent_Mass = float(line.split()[2])
+          if line.startswith('                                TDS'):
+            TDS  = float(line.split()[1])
+          if line.startswith('                   Solution density'):
+            density = float(line.split()[2])
       #place values in dataframe
-      data = {'Variables':['Xi','Aw','Temp','I', 'pH', 'TDS%','Solv_Mass'],\
-         'Step'+str(step):[xi,Aw,T,I,pH,TDS_perc,Solvent_Mass]}
+      if (T >= 20) and (T<=30): #density model only operates in that T range.
+        data = {'Variables':['Xi','Aw','Temp','I', 'pH', 'TDS','TDS%','Solv_Mass','density'],\
+          'Step'+str(step):[xi,Aw,T,I,pH,TDS,TDS_perc,Solvent_Mass,density]}
+      else:   
+        data = {'Variables':['Xi','Aw','Temp','I', 'pH', 'TDS%','Solv_Mass'],\
+          'Step'+str(step):[xi,Aw,T,I,pH,TDS_perc,Solvent_Mass]}
       dfin = pd.DataFrame(data)
       #extract aqueous species
       aq_species,aq_values,aq_gammas= _findaqueous_in36o(cwdpath,'block.temp')
@@ -429,17 +480,17 @@ def generate_tablefrom6o(process,cwdpath,eqpath,raw6opath,
       tco2 = _findtotal_co2(cwdpath,'block.temp')
       data = {'Variables':['TCO2'], 'Step'+str(step):[tco2]}
       dftc = pd.DataFrame(data)
-      #extract total formate
-      tFor = _findtotal_formate(cwdpath,'block.temp')
-      data = {'Variables':['TFor'], 'Step'+str(step):[tFor]}
-      dftf = pd.DataFrame(data)
       #extract solid species
-      sol_species,sol_values = _findsolids_in6o(eqpath,cwdpath,
-        'block.temp',solunit,process)
-      data = {'Variables':sol_species, 'Step'+str(step):sol_values}
-      dfsol = pd.DataFrame(data)
-      #concat results
-      df = pd.concat([dfin,dfaq,dfaqg,dftaq,dftc,dftf,dfsol], ignore_index=True)
+      try:
+        sol_species,sol_values = _findsolids_in6o(eqpath,cwdpath,
+          'block.temp',solunit,process)
+        data = {'Variables':sol_species, 'Step'+str(step):sol_values}
+        dfsol = pd.DataFrame(data)
+        #concat results
+        df = pd.concat([dfin,dfaq,dfaqg,dftaq,dftc,dfsol], ignore_index=True)
+      except: #exception occurs when no solids form
+        #concat results
+        df = pd.concat([dfin,dfaq,dfaqg,dftaq,dftc], ignore_index=True)
       #remove elements that have values of zero
       df = df.replace('0.0000E+00',np.nan)
       df = df.dropna()
@@ -452,6 +503,41 @@ def generate_tablefrom6o(process,cwdpath,eqpath,raw6opath,
     os.system('mv '+file6o+'.csv '+ csv_destination)
     print(file6o+'.csv created')
     del df;del dfm
+
+def compile_csvs_into_one_file(cwdpath,csv_destination,compilname='Compil'):
+  import pandas as pd
+  #create empty dataframe
+  dfm = pd.DataFrame({'Variables': []})
+  #Read all output files for plotting
+  outpath = cwdpath + 'plotting_files/csv/'
+  allfiles = [f for f in os.listdir(outpath)]
+  #check if csvs have been generated
+  if not allfiles:
+    print('No csvs found. Recreate them?');sys.exit()
+  for filecsv in allfiles:
+    if filecsv.startswith('r') :
+      if not 'CONFLICT' in filecsv:
+        print('compiling '+filecsv+'...')
+        df = pd.read_csv(outpath+filecsv)
+        #select only xi = 1 column
+        df = df.set_index('Variables').fillna(0).iloc[:,-1:]
+        #build new column name and rename
+        newname = filecsv[:-4]
+        df = df.set_axis([newname],axis=1)
+        #Add WR
+        WR=filecsv.split('-')[2]
+        df = df.T
+        df['WR']=WR
+        df = df.T
+        #merge with master dataframe
+        dfm = pd.merge(dfm,df,on='Variables',how='outer')
+  #Sort by temperature and prepare for export    
+  dfm = dfm.set_index('Variables').T.sort_values(by=['Temp'])
+  dfm = dfm.fillna(0)
+  #export to csv
+  dfm.to_csv(compilname+'.csv',index_label='Variables')
+  os.system('mv '+compilname+'.csv '+ csv_destination)
+  print(compilname+'.csv created.')
 
 #######################################################################
 # Secondary function (called from inside this file)
@@ -596,30 +682,15 @@ def _findtotal_co2(path,file36o):
   total_co2           = sum(tco2_values_infile)
   return str('%.5E'%total_co2)
 
-def _findtotal_formate(path,file36o):
-  import numpy as np
-  from itertools import islice
-  from itertools import compress
-  formate_species = ['FORMATE,aq','Mg(For)+','Mg(For)2,aq','Na(For),aq',
-    'Fe(For)+','Fe(For)2,aq']
-  aq_species,aq_values,aq_gammas = \
-    _findaqueous_in36o(path,file36o)
-  #get boolean
-  formate_bool = [x in formate_species for x in aq_species]
-  #filter
-  formate_species_infile = list(compress(aq_species,formate_bool))
-  formate_values_infile  = list(compress(aq_values,formate_bool))
-  formate_values_infile  = [float(x) for x in formate_values_infile]
-  total_formate          = sum(formate_values_infile)
-  return str('%.5E'%total_formate)
-
 def _findaqueous_in36o(path,file36o):
   import numpy as np
   from itertools import islice
   #find aqueous species in 3o or 6o file
-  text ='                --- Distribution of Aqueous Solute Species'
+  #text ='                --- Distribution of Aqueous Solute Species'
+  text ='--- Distribution of Aqueous Solute Species'
   lstart = findline_in36o(text,path,file36o)
-  text='    Species with molalities less than'
+  #text='    Species with molalities less than'
+  text='Species with molalities less than'
   lend= findline_in36o(text,path,file36o)
   #create empty array where those will be populated
   nsize = lend-lstart-5
@@ -662,9 +733,11 @@ def _find_totalaqueous(var,path,file36o):
   text = ' Species Accounting for 99% or More of Aqueous '+var
   lstart = findline_in36o(text,path,file36o)
   if file36o[-2] == '3':
-    text = '                --- Aqueous Redox'
+    #text = '                --- Aqueous Redox'
+    text = '--- Aqueous Redox'
   else:
-    text = '                     --- Summary'
+    #text = '                     --- Summary'
+    text = '--- Summary'
   lend= findline_in36o(text,path,file36o)
   nsize = lend-lstart
   with open(path+file36o) as f:
@@ -680,6 +753,9 @@ def _find_totalaqueous(var,path,file36o):
   return str('%.5E'%total_aqval) #Molality
 
 def _findsolids_in6o(eqpath,path,file36o, solunit,process='waterrock',get_solid_solution=False):
+  '''
+  Finds new solids resulting from serpentintization
+  '''
   if process == 'evaporation':
     text = '                          Mass, grams'
   else:
@@ -693,7 +769,54 @@ def __findsolids_in6o(eqpath,path,file36o, solunit,end_text):
   import numpy as np
   from itertools import islice
   #find species in 36o file
-  text = '                     --- Summary of Solid'
+  #text = '                     --- Summary of Solid'
+  text = '--- Summary of Solid'
+  lstart = findline_in36o(text,path,file36o)
+  lend= findline_in36o(end_text,path,file36o)
+  #create empty array where those will be populated
+  nsize = lend-lstart
+  solid_species = [None]*nsize
+  try:
+    solid_values = [None]*nsize
+  except:
+    print('Error: Something happened. Maybe close .o file')
+    sys.exit()
+  #populate array
+  row = 0 #counter
+  with open(path+file36o) as f:
+    lines = islice(f,lstart+3,lend-3)
+    for line in lines:
+      if line.startswith(' None'):
+        continue
+      if not line.isspace():
+        #identify solid solutions
+        if line[2] == ' ':
+          #Extract name and values. Append '_out' for later filter
+          solid_species[row] = ('-').join(line.split()[:-4])+'_pcss_out'
+          solid_values[row]  = line.split()[-3]
+        else:
+          #Extract name and values. Append '_out' for later filter
+          solid_species[row] = ('-').join(line.split()[:-4])+'_out'
+          solid_values[row]  = line.split()[-3]
+        if solunit=='Grams':
+          solid_values[row]  = line.split()[-2]
+        row = row+1
+  #remove [None] from vector
+  solid_species = list(filter(None, solid_species))
+  solid_values = list(filter(None, solid_values))
+  return solid_species, solid_values
+
+def _find_all_solids_in6o(eqpath,path,file36o, solunit):
+  '''
+  Finds all solids, ES + PRS + Reactants, left in the rocks, so
+  that means initial minerals that have not completely reacted
+  and new minerals formed
+  '''
+  import numpy as np
+  from itertools import islice
+  #find species in 36o file
+  text = '            --- Grand Summary of Solid'
+  end_text = '                          Mass, grams'
   lstart = findline_in36o(text,path,file36o)
   lend= findline_in36o(end_text,path,file36o)
   #create empty array where those will be populated
@@ -771,3 +894,108 @@ def _calculate_mineral_moles_OLIss(OLIVINE,RC,path,filename):
   #calculate mineral moles
   mol_min = np.divide(np.multiply(rockmass,[x/100. for x in RC]),weig_min)
   return mol_min
+
+def merge_unreacted_and_secondary_minerals_into_new_tophalf(studyfolder,eqpath,cwdpath,
+  filename6i,all_mineral_file,serp_db):
+  '''
+  This function extracts minerals from 6o file and creates a new tophalf. 
+  Hardcoded for 'mbn' thermo database
+  '''
+  if 'mbn' not in serp_db:
+    print('Error: Function merge_* in eq36python.py only designed to work with mbn database.')
+    sys.exit()
+  #list of solid solution in mbn database
+  ss_list = ['Carbonate-Calcite','MOL. MIX. AMPH.','BIOTITE','CHLORITE-SS','EPIDOTE-SS',
+    'GARNET-SS','OLIVINE','IDEAL-OLIVINE','ORTHOPYROXENE','CLINOPYROXENE','PARG BINARY',
+    'IDEAL PLAGIOCLASE','PLAGIOCLASE,LOW','SERP-SS','BRUCITE-SS','TALC-SS','MICROCLINE-SS',
+    'Calcite-SS']
+  #add '_out' to all minerals as that's how they are recognized historically
+  ss_list = [x+'_out' for x in ss_list]
+  #find number of secondary minerals
+  #ss =  solid_species, sv = solid_values
+  ss, sv = _find_all_solids_in6o(eqpath,cwdpath,all_mineral_file,'Moles')
+  ss = ss + [''] #add blank element to facilitate index search below
+  nm     = len(ss) #number of minerals
+  print(str(nm)+' alteration minerals found:')
+  print(ss)
+  #print(sv)
+  #pull the header from the 6i file, and then add all minerals detected
+  #above below it
+  string='|Reactants'
+  num_line = findline_in36o(string,cwdpath,filename6i)
+  lines = open(cwdpath+filename6i).readlines()
+  tophalf_reactant = 'tophalf_mbn.temp'
+  f1 = open(tophalf_reactant, 'w')
+  f1.writelines(lines[0:num_line])
+  f1.close()
+  #Given minerals, identify if they are solid solutions and append
+  mc = 0 #mineral counter
+  mineral_blank_folder = 'blank_6i_mineral_blocks/'
+  #-----------------------------------  
+  ##append symbolic Fe+++ as a reactant
+  #mineral_blank = 'aqueouspecies_as_reactant.rock'
+  ###import blank mineral template
+  #os.system('cp '+cwdpath+'input_files/'+studyfolder+mineral_blank_folder+mineral_blank+' '+cwdpath)
+  ###change mineral name in the file
+  #edit_in6i('|Reactant        |Aqueous1','Fe+3_out',cwdpath,'reactant',mineral_blank) #_out is a hack
+  ###change quantity. 
+  #edit_in6i('|->|Amount re',1e-20,cwdpath,'moles',mineral_blank)
+  #edit_in6i('|--->|dXi(n)/',1e-20,cwdpath,'dxixi',mineral_blank)
+  #append aqueous species as a reactant
+  #f1 = open(tophalf_reactant, 'a+')
+  #f2 = open(mineral_blank, 'r')
+  #f1.write(f2.read())
+  #f1.close()
+  #f2.close()
+  #-----------------------------------
+  for i in range(len(ss)):
+    if ss[mc]=='':break #the whole array has been surveyed
+    print(25*'-')
+    print('Preparing mineral: '+ss[mc])
+    if ss[mc] in ss_list: #solid solution
+      #how many endmembers? How many times does pcss appear after detection of solid solution
+      next_mineral_index = [(index, element) for index, element in enumerate(ss) if index > ss.index(ss[mc]) and 'pcss' not in element][0][0]
+      nem = next_mineral_index - ss.index(ss[mc]) - 1
+      mineral_blank = 'ss_'+str(nem)+'min_as_reactant.rock'
+      os.system('cp '+cwdpath+'input_files/'+studyfolder+mineral_blank_folder+mineral_blank+' '+cwdpath)
+      #edit SS names to remove the dash if the name contains 'SS'. This is designed for the 'mbn' database
+      if ('IDEAL' in ss[mc]) or ('SS' in ss[mc] and ('SERP' in ss[mc] or 'BRUCITE' in ss[mc] or 'TALC' in ss[mc])):
+        ss[mc] = ' '.join(ss[mc].split('-'))
+      #change mineral name in the salt file
+      edit_in6i('|Reactant        |SS_MINERAL',ss[mc],cwdpath,'reactant',mineral_blank)
+      #change quantity.
+      edit_in6i('|->|Amount re',sv[mc],cwdpath,'moles',mineral_blank)
+      edit_in6i('|--->|dXi(n)/',sv[mc],cwdpath,'dxixi',mineral_blank)
+      for j in range(nem): 
+        #udpate value
+        edit_in6i('|--->|SS_COMPONENT'+str(j+1),float(sv[mc+j+1])/float(sv[mc]),cwdpath,'endmember_value',mineral_blank)
+        #update mineral name
+        edit_in6i('|--->|SS_COMPONENT'+str(j+1),ss[mc+j+1],cwdpath,'endmember',mineral_blank)
+      #update mineral counter
+      mc = next_mineral_index
+    else: #pure mineral
+      mineral_blank = 'puremineral_as_reactant.rock'
+      #import blank mineral template
+      os.system('cp '+cwdpath+'input_files/'+studyfolder+mineral_blank_folder+mineral_blank+' '+cwdpath)
+      #change mineral name in the file
+      edit_in6i('|Reactant        |Mineral1',ss[mc],cwdpath,'reactant',mineral_blank)
+      #change quantity. 
+      edit_in6i('|->|Amount re',sv[mc],cwdpath,'moles',mineral_blank)
+      edit_in6i('|--->|dXi(n)/',sv[mc],cwdpath,'dxixi',mineral_blank)
+      #update mineral counter
+      mc = mc+1
+    #append mineral as a reactant
+    f1 = open(tophalf_reactant, 'a+')
+    f2 = open(mineral_blank, 'r')
+    f1.write(f2.read())
+    f1.close()
+    f2.close()
+  #append the rest of the tophalf file
+  string='|->|Backward rate law'
+  num_line = findline_in36o(string,cwdpath,filename6i)
+  lines = open(cwdpath+filename6i).readlines()
+  f1 = open(tophalf_reactant, 'a+')
+  f1.writelines(lines[num_line:])
+  f1.close()
+  #and extract just the tophalf
+  remove_bottomhalf(cwdpath,tophalf_reactant,'tophalf_mbn.rock')

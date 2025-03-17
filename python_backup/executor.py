@@ -21,7 +21,7 @@ inputfolder  = cwdpath + 'input_files/'
 #######################################################################
 def load_study_files(studyfolder):
   print(51*'-')
-  print('        chEQWRk  v0.1 - Water:Rock Reactions ')
+  print('    chEQWRk - EQ3/6 Water:Rock Reactions wrapper ')
   print('       (disable this launcher in executor.py) ')
   print(51*'-')
   available_study_files = os.listdir(studyfolder)
@@ -36,7 +36,7 @@ def launch_study(study):
   os.system('python3 '+study+'.py')
 
 def clean(study):
-  os.system('rm '+study+'.py')
+  os.system('rm *study*.py') #removes study executors after runs (declutter)
 #######################################################################
 # Support functions
 #######################################################################
@@ -64,8 +64,8 @@ def perform_checks(inputfolder,studyfolder,study):
 # Main function
 #######################################################################
 def main(studyfolder):
-  #study_to_load = 'som_2024_brines_study' #uncomment to set default
-  study_to_load = load_study_files(studyfolder) #comment to set default
+  study_to_load = 'boden_2025_phosphorus_study' #uncomment to set default
+  #study_to_load = load_study_files(studyfolder) #comment to set default
   perform_checks(inputfolder,studyfolder,study_to_load)
   launch_study(study_to_load)
   clean(study_to_load)

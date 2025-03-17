@@ -48,7 +48,6 @@ def evaporation(T,WR,xi,dxi,filename3i,tophalf,platform,db,cwdpath,\
     #drop minerals at the end of the run
     eq.edit_iopt_in_6i(filename6i,cwdpath,7,'Do it')
   #And run EQ6
-  sys.exit()
   conv=eq.run_eq(6,eqpath,cwdpath,filename6i,db,platform)
   return conv
 #######################################################################
@@ -74,7 +73,7 @@ def evaporation_and_nothing_else(pH,T_start,WR,path_files,wr_files,drop_minerals
   print(25*'-')#-------------------------------------------------------
   #Move files
   #rename and move to output folder
-  suffix = input('Enter file suffix (e.g. carb_supp): ')
+  suffix = input('Enter file suffix with underscore (e.g. carb_supp): ')
   newbrinefile = 'rb-'+suffix+'-evap'
   filename6o = 'brine.6o'
   os.system('cp '+filename6o+' '+newbrinefile+'.6o')
@@ -128,11 +127,9 @@ def make_brine(T_start,WR,Awset,path_files,wr_files,drop_minerals = False):
   print('Water activity: '+str(Aw))
   msg = ('Solvent mass:',str(SolMass),'grams')
   print(' '.join(msg))
+  os.system('mv brine.6p brine.6i') 
   print('filename: brine.6i')
   #Move files
-  os.system('cp brine.6p brine.6i')
-  os.system('mv brine.6p'+' output_files/just_the_brine.6p') 
-  os.system('cp brine.6o'+' output_files/just_the_brine.6o') 
   #rename and move to output folder
   allinput = [Aw,T_start]
   newbrinefile = 'rb-'+'-'.join([str('%.2f'%x) for x in allinput])

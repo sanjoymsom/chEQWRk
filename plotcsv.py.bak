@@ -310,25 +310,17 @@ def plot_minerals(dfm, cwdpath, visualize):
 
 def plot_h2_by_mineral(cwdpath,csv_destination):
   allfiles = [f for f in os.listdir(csv_destination)]
-  if not allfiles:
-    print('Error: No csvs to process. Create them first.')
-    sys.exit()
-  #set filename to read
   filename6i = 'serp.6i'
-  itexists = os.path.exists(cwdpath+'plotting_files/rock6i/'+filename6i)
-  if itexists:
-    print('Reading '+filename6i+' for rock olivine content.')
-  else:
-    print('rock file missing or misnamed. Check plot_h2_by_mineral in plotcsv.py.')
-    sys.exit()
   #check if csvs exist
   if not allfiles:
     print('Error: No csvs to process. Create them first.')
     sys.exit()
   #Get Olivine moles
   minline = eq.findline_in36o('|Reactants',cwdpath+'plotting_files/rock6i/',filename6i)
+  #minline = eq.findline_in36o('|Reactants',cwdpath+'output_files/','serp.6i')
   detect_olivine = False
   with open(cwdpath+'plotting_files/rock6i/'+filename6i) as f:
+  #with open(cwdpath+'output_files/serp.6i') as f:
     lines = islice(f,minline+1,minline+8)
     for line in lines:
       if ('OLIVINE' or 'Olivine') in line:
@@ -339,7 +331,6 @@ def plot_h2_by_mineral(cwdpath,csv_destination):
   if not detect_olivine:
     print('Olivine was not detected. Check some things.')
     sys.exit()
-  #---------------------------------------------------------------  
   #Analysis
   for filecsv in allfiles:
     #open file

@@ -1,4 +1,4 @@
-####################################################################
+#####################################################################
 # plotcsv.py
 #
 # Plotting file. Performs serpentinization with brines
@@ -14,6 +14,8 @@ import sys
 import eq36python as eq
 from itertools import islice
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
+from matplotlib.colors import ListedColormap, LogNorm
 plt.rcParams.update({'font.size': 12})
 #######################################################################
 # Main plotting function
@@ -90,9 +92,9 @@ def setup_and_plot_brines(plot_style,cwdpath,csv_destination,
 
 def setup_and_plot_vars(plot_style,cwdpath,csv_destination, 
     plot_lit=False,plot_field=False,ax1=None, lt=None,
-    default_label=None): #lt = line type
-  allfiles = [f for f in os.listdir(csv_destination)]
-  allfiles = [x for x in allfiles if 'r' in x]
+    default_label=None,allfiles=None): #lt = line type
+  if not allfiles:
+    allfiles = [f for f in os.listdir(csv_destination)]
   try:
     fig,ax1 = plt.subplots()
   except:
@@ -102,41 +104,97 @@ def setup_and_plot_vars(plot_style,cwdpath,csv_destination,
   if not allfiles:
     print('Error: No csvs to process. Create them first.')
     sys.exit()
+  #begin plotting setup
+  option  = 0 # zero: no group option selected
+  option2 = 0 # zero: no group option selected
+  y_group = False
+  x_group = False
+  mStyles = ["x","*","o","v","^","<",">","1","2","3","4","8","s","p",
+  "P",",","h","H","+",".","X","D","d","|","_",0,1,2,3,4,5,6,7,8,9,10,11]
+  #iterate over all the csvs
+  fc = 0 #file counter
   for filecsv in allfiles:
     #open file
     df = pd.read_csv(csv_destination+filecsv).fillna(0)
     df = df.set_index('Variables').T
-    #remove '_out' from mineral names
-    #df.columns=[x.rstrip('_out') for x in df.columns]
-    #identify which variables are of interest
-    if 'yvar' in locals(): #check if var has been set
-      pass
-    else:
+    #request user input at first iteration
+    if fc == 0:
+      if plot_style == 2:
+        print('Numerator:')
       xvar,yvar = _ask_for_plotting_variables(df)
-    #get carbonates
-    if (xvar == 'carbonates_out') or (yvar == 'carbonates_out'):
-      df = _get_carbonates(df)
+    #handle the group selection
+    df, xvar, yvar, option, x_group, y_group = _get_species_group(df,xvar,yvar,option, x_group, y_group)
     #sort data by xvar
     df = df.sort_values(by=[xvar])
     #get desired label
-    label = 'Aw = '+filecsv.split('-')[1]
-    #------ start plot styles --------------------------------------
+    try:
+      label = 'Aw = '+filecsv.split('-')[1]       #Som et al. 2024
+      if default_label == 'Boden2025':
+        label = 'W:R = '+filecsv.split('-')[4]    #Boden et al. 2025
+    except:
+      label = filecsv.split('-')[1]
+    #------ start plot styles ----------------------------------------------------------------
     if plot_style == 0: # 1 variable vs another
-      _plot_vars(xvar,yvar,df,ax1,label,lw=3,lt=lt)
+      _plot_vars(xvar,yvar,df,ax1,label,mStyles[fc],lw=1)
+      #reset group vars if needed
+      if x_group: xvar = 'group'
+      if y_group: yvar = 'group'
+    #-----------------------------------------------------------------------------------------
+    elif plot_style == 1: # 2 variables vs another
+      _plot_vars(xvar,yvar,df,ax1,label,mStyles[fc],lw=1)#,ls=linedesign[fc])
+      #reset group vars if needed
+      if x_group: xvar = 'group'
+      if y_group: yvar = 'group'
+      #get user input for second plot
+      if fc == 0:
+        _ , yvar = _ask_for_plotting_variables(df,second_plot=True)
+      #handle the group selection
+      df, xvar, yvar, option2, x_group, y_group = _get_species_group(df,xvar,yvar,option2, x_group, y_group)
+      #and plot
+      label = None
+      _plot_vars(xvar,yvar,df,ax1,label,mStyles[fc],lw=1)#,ls=linedesign[fc]) #4 is a linewidth
+      plt.legend(loc=2,frameon=False)
+      # reset group vars if needed
+      if x_group: xvar = 'group'
+      if y_group: yvar = 'group'
+    #------------------------------------------------------------------------------------------
+    elif plot_style == 2: # ratio of 2 variables vs another
+      if fc == 0:
+        #save selection as numerator
+        xvar_num = xvar
+        yvar_num = yvar
+        #get denominator
+        print('Denominator:')
+        xvar_denom,yvar_denom = _ask_for_plotting_variables(df)
+      #handle the group selection
+      df, xvar_denom, yvar_denom, option2, x_group, y_group = _get_species_group(df,xvar_denom,yvar_denom,option2, x_group, y_group)
+      #get ratio
+      if xvar_num == xvar_denom: #if same request, assume no ratio
+        x_ratio = xvar_num
+        df[x_ratio] = df[xvar_num]
+      else:
+        x_ratio = xvar_num+'/'+xvar_denom
+        df[x_ratio] = df[xvar_num] / df[xvar_denom]
+      if yvar_num == yvar_denom: #if same request, assume no ratio
+        y_ratio = yvar_num
+        df[y_ratio] = df[yvar_num]
+      else:
+        y_ratio = yvar_num+'/'+yvar_denom
+        df[y_ratio] = df[yvar_num] / df[yvar_denom]
+      #and plot
+      _plot_vars(x_ratio,y_ratio,df,ax1,label,mStyles[fc],lw=1)
+      #plot 1:1 line
+      plt.plot(df[x_ratio],df[y_ratio]/df[y_ratio],'k:')
+      #reset group vars if needed
+      if x_group: xvar = 'group'; xvar_denom = 'group'
+      if y_group: yvar = 'group'; yvar_denom = 'group'
+    #------------------------------------------------------------------------------------------
+    fc = fc+1
+
   #Add literature values if desired
-  if (yvar == 'H2,aq') and (xvar == 'Temp'):
+  if ((yvar == 'H2,aq') or (yvar == 'H2,AQ')) and (xvar == 'Temp'):
     _get_and_plot_literature_H2(cwdpath,plot_lit)
-    #Get WR to set y-range for esthetics
-    WR = float(filecsv.split('-')[4])
-    if WR - 1. < 1e-10: #WR = 1
-      pass
-    elif WR - 0.1 < 1e-10: #WR = 0.1
-      pass
-    elif WR - 10. < 1e-10: #WR = 10
-      ax1.set_ylim([1e-3,1e3])
-      ax1.set_yscale('log')
-    else:
-      pass
+    #ax1.set_ylim([1e-3,1e3])
   elif (yvar == 'pH') and (xvar == 'Temp'):
     _get_and_plot_literature_pH(cwdpath,plot_lit)
   elif (yvar == 'pH') and (xvar == 'Aw'):
@@ -177,8 +235,8 @@ def mineral_superset(cwdpath):
   #organize alphabetically
   dfm = dfm.sort_values("Variables")
   #save to csv so that the next file can use the same colors
-  dfm.to_csv('mineral.colors', index=True)
-  os.system('mv mineral.colors plotting_files') 
+  dfm.to_csv('mineral.colors', index=True) 
+  os.system('mv mineral.colors plotting_files')
   return dfm
 
 def plot_minerals(dfm, cwdpath, visualize):
@@ -190,7 +248,9 @@ def plot_minerals(dfm, cwdpath, visualize):
       'BRUCITE-SS'   : 'BRUCITE',
       'SERP-SS'      : 'SERPENTINE',
       'TALC-SS'      : 'TALC',
-      'MOL.-MIX.-AMPH.': 'AMPHIBOLE'
+      'MOL.-MIX.-AMPH.': 'AMPHIBOLE',
+      'AMPHIB.-TERNARY': 'AMPHIBOLE',
+      'FERROUS-OXIDE'  : 'FERROUS OXIDE'
     }
     #map dictionary to dataframe
     df['Phases'] = df['Variables']
@@ -219,7 +279,7 @@ def plot_minerals(dfm, cwdpath, visualize):
     # to assign colorcode from superset
     df_merge = pd.merge(dfm, df, on=['Variables'])
     #add back the temp row from df to the merged dataframe
-    df = df_merge.append(df.iloc[-1])
+    df = pd.concat([df_merge, df.iloc[[-1]]], ignore_index=True)
     #request user input on minerals to plot
     df = _ask_mineral_index(df.reset_index(drop=True))
     #assign fixed colors
@@ -237,14 +297,15 @@ def plot_minerals(dfm, cwdpath, visualize):
     df = df.divide(df.sum(axis=1), axis=0)
     #stack plot
     ax=df.plot.area(lw=0,colormap=colors,stacked=True,alpha=0.8)
+    ax.legend(loc='upper left', title='Phases')
     #niceties
     ax.set_xlabel(r'Temperature [$\circ$C]')
     ax.set_ylabel('Norm. minerals')
     ax.set_ylim([0, 1])
     ax.set_xlim([10, 400])
     #create labels
-    label = 'Aw = '+filecsv.split('-')[1]
-    ax.set_title(label)
+    #label = 'Aw = '+filecsv.split('-')[1]
+    #ax.set_title(label)
     plt.show()
 
 def plot_h2_by_mineral(cwdpath,csv_destination):
@@ -320,7 +381,7 @@ def plot_Fe_content_by_mineral(cwdpath,csv_destination):
   if not allfiles:
     print('Error: No csvs to process. Create them first.')
     sys.exit()
-  total_plots = 4
+  total_plots = 3
   #Analysis
   for p in range(total_plots):
     fig,ax1 = plt.subplots()
@@ -376,12 +437,204 @@ def plot_Fe_content_by_mineral(cwdpath,csv_destination):
     ax1.legend(loc='center left', bbox_to_anchor=(1, 0.5),frameon=False)
     plt.show()
 
+def csv2ternary(cwdpath,csv_destination,compilfile,mcb=False,springfile='dummy',shade=True):
+  #Inspired by https://stackoverflow.com/questions/29512046/
+  #  how-to-create-ternary-contour-plot-in-python
+  from matplotlib import ticker
+  import matplotlib.pyplot as plt
+  import matplotlib.tri as tri
+  import matplotlib.cm as cm
+  import pandas as pd
+  import numpy as np
+  #open compilation file
+  outpath = cwdpath + csv_destination
+  df = pd.read_csv(outpath+compilfile)
+  #df = df.set_index('Variables')
+  #merge compil with odeMethanogen results
+  if os.path.exists(outpath+springfile):
+    df_ode = pd.read_csv(outpath+springfile).fillna(0)
+    df_ode = df_ode.rename(columns={0: "Variables"})
+    df_ode.columns = df_ode.columns.str.replace('Unnamed: 0','Variables')
+    df_ode = df_ode.drop(['Units'],1).set_index('Variables').T
+    #at this point, both df and df_ode have the same format but let's make things easy
+    df['DGr_blk']       = df_ode['DGr_blk'].values
+    df['Yield_model']   = df_ode['Yield_model'].values
+    df['doubling_time'] = df_ode['doubling_time'].values
+  else:
+    pass
+  df = df.set_index('Variables')
+  #get user input-------------------------------------------------------
+  var = input('Which variable to plot? (or list, or group, or ratio): ')
+  ratans = 'n' #default
+  if var == 'list':
+    print(list(df.T.index))
+    var = input('Which variable to plot? ')
+  elif (var == 'group'):
+    df, var,_,_,_,_ = _get_species_group(df,var,var)
+  elif (var == 'ratio'):
+    ratans = input('Plotting a group? [y] or [n]: ')
+    if ratans == 'n':
+      var1 = input('Which variable is numerator? ')
+      var2 = input('Which variable is denominator? ')
+      var = var1+'/'+var2
+      df[var] = df[var1] / df[var2]
+    else:
+      print('Numerator:')
+      df, var1,_,_,_,_ = _get_species_group(df,'group','group')
+      print('Denominator:')
+      df, var2,_,_,_,_ = _get_species_group(df,'group','group')
+      var = var1+'/'+var2
+      df[var] = df[var1] / df[var2]
+  #end user input -------------------------------------------------------- 
+  #Read all output files for plotting
+  filelist=os.listdir(outpath)
+  #organize around temperature and loop
+  Temps = df['Temp'].unique().tolist()
+  df_complete = df
+  for T in Temps:
+    df=df_complete.loc[df_complete['Temp'] == T]
+    #add columns for OLI, OPX, CPX
+    df=pd.concat([df,pd.DataFrame(columns=['wt% OLI','wt% OPX','wt% CPX'])])
+    for index, row in df.iterrows():
+      index_ne = index[:-3] #ne: no extension
+      minerals = index_ne.split('-')
+      #remove spurious empty element
+      minerals = [x for x in minerals if x]
+      #and assign
+      df.loc[index,'wt% OLI'] = float(minerals[-3])
+      df.loc[index,'wt% OPX'] = float(minerals[-2])
+      df.loc[index,'wt% CPX'] = float(minerals[-1])
+    Temp = minerals[2]
+    WR   = minerals[4]
+    #get correct units
+    df_xvar,xunit,xvar,xscale = _get_plot_units(var,df)
+    #load data for ternary
+    c = df['wt% OLI']
+    a = df['wt% OPX']
+    b = df['wt% CPX']
+    v = df_xvar
+    try:
+      fig, ax = plt.subplots()
+    except:
+      print('Error: Cannot connect to display. X-Window is not on.')
+      sys.exit()
+    # translate the data to cartesian corrds
+    x = 50. * ( 2.*b+c ) / ( a+b+c )
+    y = 57.6 * np.sqrt(3) * c / (a+b+c)
+    # create a triangulation out of these points
+    T = tri.Triangulation(x,y)
+    # plot the contour; cmap='jet' is pretty but not good for color blind folks
+    cmap = cm.terrain_r
+    if var == 'target_key':
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap)
+      fmt = '%.1f'
+    elif var == 'pH':
+      levs = np.linspace(7,12,11)
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap,levels=levs)
+      fmt = '%.1f'
+    elif var == 'H2,aq':
+      levs = np.logspace(-2,3,6)
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap,levels=levs,
+        locator=ticker.LogLocator())
+      fmt = '%.1e'
+    elif var == 'CO2,aq':
+      levs = np.logspace(-10,2,13)
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap,levels=levs,
+        locator=ticker.LogLocator())
+      fmt = '%.1e'
+    elif var.startswith('DGr'):
+      cmap.set_under('w')
+      levs = np.linspace(-150,-60,10)
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap,levels=levs)
+      fmt = '%.1f'
+    elif (var == 'Yield_model'):
+      cmap.set_under('w')
+      levs = np.logspace(-22,-13,10)
+      ter = plt.tricontourf(x,y,T.triangles,v,locator=ticker.LogLocator(),
+        vmin = 1e-20,cmap=cmap,levels=levs)
+      fmt = '%.1e'
+    elif var == 'doubling_time':
+      cmap.set_under('w')
+      levs = np.logspace(-3,5,9)
+      ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap,levels=levs,
+        locator=ticker.LogLocator())
+      fmt = '%.1e'
+    elif '/' in var:
+      #cmap, norm = _get_custom_cmap_ternary(df[var])
+      ter = plt.tricontourf(x,y,T.triangles,v,locator=ticker.LogLocator(),
+        cmap=cmap)#, norm=norm)#,levels=levs)
+      fmt = '%.1e'
+    else:
+      try:
+        loglin = input('Log [1] or linear [2] scale?: ')
+        if (loglin == '1') or (loglin == 'log'):
+          ter = plt.tricontourf(x,y,T.triangles,v,locator=ticker.LogLocator(),
+            cmap=cmap) #orders or magnitude resolution <-------------------------- !
+        elif (loglin =='2') or (loglin == 'linear') or (loglin == 'lin'):
+          ter = plt.tricontourf(x,y,T.triangles,v,locator=ticker.LogLocator(),
+            cmap=cmap,levels=levs) #finer resolution  <-------------------------- !
+      except:
+        ter = plt.tricontourf(x,y,T.triangles,v,cmap=cmap)
+      fmt = '%.1e'
+    # create the grid
+    corners = np.array([[0, 0], [100, 0], [50,  np.sqrt(3)*57.6]])
+    triangle = tri.Triangulation(corners[:, 0], corners[:, 1])
+    # creating the grid
+    refiner = tri.UniformTriRefiner(triangle)
+    trimesh = refiner.refine_triangulation(subdiv=2)
+    #get user input to display actual points of data
+    datax = input('Show actual location of data? [y] or [n]: ')
+    if datax == 'y':
+      ter = plt.plot(x,y,'kx')#,T.triangles,v,locator=ticker.LogLocator(),
+      plt.show();sys.exit()
+    else:
+      pass
+    #plotting the mesh and calibrate the axis
+    plt.triplot(trimesh,'k--')
+    plt.gcf().text(0.07, 0.05, 'OPX', fontsize=12,color='black')
+    plt.gcf().text(0.93, 0.05, 'CPX', fontsize=12,color='black')
+    plt.gcf().text(0.5, 0.9, 'OLI', fontsize=12,color='black')
+    plt.gcf().text(0.13, 0.82, 'Max: '+str(fmt%max(v)), fontsize=11,
+      color='black')
+    plt.gcf().text(0.13, 0.75, 'Min: '+str(fmt%min(v)), fontsize=11,
+      color='black')
+    plt.gcf().text(0.13, 0.9, 'Temp: '+str(Temp)+' C, WR: '+str(WR),
+      fontsize=12,color='black')
+    if ratans == 'n':  
+      plt.gcf().text(0.69, 0.9, 'Units: '+xunit,fontsize=12,color='black')
+    # plot location of McCollom & Bach
+    if mcb:
+      a = 2.5
+      b = 2.5
+      c = 95.
+      x = 50. * ( 2.*b+c ) / ( a+b+c )
+      y = 57.6 * np.sqrt(3) * c / (a+b+c)
+      plt.plot(x,y,'ks')
+    #set scale for axis
+    ax.set_xlim(0, 100)
+    ax.set_xticks([0, 25, 50, 75, 100])
+    ax.set_ylim(0, 100)
+    ax.set_yticks([0, 25, 50, 75, 100])
+    #other niceties
+    cax = plt.axes([0.72, 0.55, 0.055, 0.3])
+    cbar=plt.colorbar(ter,cax=cax,format=fmt)
+    cax.yaxis.set_label_position('left')
+    cbar.set_label(xvar)#,fontsize=9)
+    #include Shaded regions correspond to the compositional space of 
+    # terrestrial ophiolitic and orogenic ultramafic rocks
+    # Define the vertices of the polygon (e.g., a quadrilateral)
+    polygon_vertices = [(20, 40), (50, 100), (52.5, 95), (35, 45)]
+    polygon = patches.Polygon(polygon_vertices, closed=True, color="black", edgecolor=None, alpha=0.3)
+    ax.add_patch(polygon)
+    #tada!
+    plt.show()
+
 #######################################################################
 # Supporting function
 #######################################################################
 def _ask_for_plotting_variables(df,second_plot=False):
   #identify which variables are of interest
-  yvar=input('Which Y-AXIS variable to plot? (or list, or carbonates_out): ')
+  yvar=input('Which Y-AXIS variable to plot? (or list, or group): ')
   if (yvar == 'list') or (yvar == 'ls'):
     print(list(df.T.index))
     yvar=input('Which Y-AXIS variable to plot? ')
@@ -395,7 +648,7 @@ def _ask_for_plotting_variables(df,second_plot=False):
     xvar=[] #dummy
   return xvar,yvar
 
-def _plot_vars(x_var,y_var,df,ax,label,lw=1,lt=None,default_label=None):
+def _plot_vars(x_var,y_var,df,ax,label,mStyle,lw=1,ls=None,lt=None,default_label=None):
     import numpy as np
     import matplotlib.pyplot as plt
 
@@ -412,12 +665,9 @@ def _plot_vars(x_var,y_var,df,ax,label,lw=1,lt=None,default_label=None):
     plt.xlabel(' '.join([x_var,xunit]))
     plt.ylabel(' '.join([y_var,yunit]))
     #yvar = __force_label(yvar)
-    plt.plot(df_xvar,df_yvar,label=label,linewidth=lw,color=lt)
+    plt.plot(df_xvar,df_yvar,marker=mStyle,label=label,linewidth=lw,color='k')
     ax.set_yscale(yscale)
     ax.set_xscale(xscale)
-    #enter plot tayloring here
-    #if yvar_orig == 'pH':
-    #  plt.gca().set_ylim(3,13)
 
 def _get_plot_units(varstr,df):
     if varstr == 'WR':
@@ -443,29 +693,42 @@ def _get_plot_units(varstr,df):
     elif varstr == 'Solv_Mass':
       var    = df[varstr]
       unit   = '[g]'
-      varstr = 'Solvent mass'
+      varstr = 'Water mass'
       scale  = 'linear'
     elif varstr == 'TDS%':
       var    = df[varstr]
       unit   = '[%]'
       varstr = 'TDS'
       scale  = 'linear'
-    elif varstr == 'TFor':
-      var    = df[varstr]*1000.
-      unit   = '[mmolal]'
-      varstr = 'Total formate'
+    elif varstr == 'TDS':
+      var    = df[varstr]
+      unit   = '[g/L]'
+      varstr = 'TDS'
       scale  = 'linear'
+    elif varstr == 'density':
+      var    = df[varstr]
+      unit   = '[g/L]'
+      varstr = 'Density'
+      scale  = 'linear'    
     elif varstr == 'Xi':
       var    = df[varstr]
       unit   = ''
       varstr = r'Reaction progress $\xi$'
+      scale  = 'linear'
+    elif '/' in varstr:
+      var    = df[varstr]
+      unit   = ''
+      scale  = 'log'
+    elif 'hosph' in varstr: 
+      var    = df[varstr]*1e12
+      unit   = '[pmolal]'
       scale  = 'linear'
     elif varstr.startswith('g'):
       var    = 10.**df[varstr]
       unit   = ''
       varstr = r'Activity coefficient: $\gamma$'+varstr[1:]
       scale  = 'linear'
-    elif '_out' in varstr:
+    elif '_out' in varstr: #minerals
       try:
         var    = df[varstr]
       except:
@@ -490,10 +753,118 @@ def _get_plot_units(varstr,df):
         df[varstr].iloc[:] = 0.00 
         var    = df[varstr]
       unit   = '[mmolal]'
-      scale  = 'linear'
+      scale  = 'linear' #<------- !
     return var,unit,varstr,scale
 
-def _get_carbonates(df):
+def _get_species_group(df,xvar,yvar,option=0,xg=False,yg=False):
+  if ((xvar == 'group') or (yvar == 'group')) and (option == 0):
+    print('Select group of interest:')
+    print('1: Carbonate minerals')
+    print('2: Phosphates')
+    print('3: Phosphites')
+    print('4: Pyrophosphates')
+    print('5: Hypophosphites')
+    option=int(input('Enter choice: '))
+    show_species = True
+  else:
+    show_species = False
+  #get species
+  if xvar == 'group':
+    xg = True
+    df,xvar,option = __sum_species_from_group(df,xvar,option,show_species)
+    return df, xvar, yvar, option, xg, yg
+  elif yvar == 'group':
+    yg = True
+    df,yvar,option = __sum_species_from_group(df,yvar,option,show_species)
+    return df, xvar, yvar, option, xg, yg
+  else:  
+    return df, xvar, yvar, option, xg, yg
+
+def __sum_species_from_group(df,var,option,show):
+  if option == 1:
+    df, var = _get_carbonates(df, show)
+  elif option == 2:
+    df, var = _get_phosphates(df, show)
+  elif option == 3:
+    df, var = _get_phosphites(df, show)
+  elif option == 4:
+    df, var = _get_pyrophosphates(df, show)
+  elif option == 5:
+    df, var = _get_hypophosphites(df, show)
+  else:
+    pass
+  return df, var, option
+
+def _get_phosphates(df, show):
+    phosphates_tde=['HPO4-2', 'PO4-3', 'H2PO4-', 'H3PO4,AQ']
+    if show:
+      print('Array of species summed is:')
+      print(phosphates_tde)
+    phosphates = phosphates_tde
+    #create phosphates column
+    var = 'Phosphates'
+    df[var] = 0
+    for species in phosphates:
+      try:
+        df[species]
+        df[var] = df[var] + df[species]
+      except:
+        continue
+    return df, var
+
+def _get_phosphites(df, show):
+    phosphites_tde=['HPO3-2', 'H2PO3-', 'H3PO3,AQ']
+    if show:
+      print('Array of species summed is:')
+      print(phosphites_tde)
+    phosphites = phosphites_tde
+    #create phopshites column
+    var = 'Phosphites'
+    df[var] = 0
+    for species in phosphites:
+      try:
+        df[species]
+        df[var] = df[var] + df[species]
+      except:
+        continue
+    return df, var
+
+def _get_pyrophosphates(df, show):
+    pyrophosphates_tde=['P2O7-4', 'HP2O7-3', 'H2P2O7-2', 'H3P2O7-', 'H4P2O7,AQ']
+    if show:
+      print('Array of species summed is:')
+      print(pyrophosphates_tde)
+    pyrophosphates = pyrophosphates_tde
+    #create pyrophosphates column
+    var = 'Pyrophosphates'
+    df[var] = 0
+    for species in pyrophosphates:
+      try:
+        df[species]
+        df[var] = df[var] + df[species]
+      except:
+        continue
+    return df, var
+
+def _get_hypophosphites(df, show):
+    hypophosphites_tde=['H2PO2-','H3PO2,AQ']
+    if show:
+      print('Array of species summed is:')
+      print(hypophosphites_tde)
+    hypophosphites = hypophosphites_tde
+    #create pyrophosphates column
+    var = 'Hypophosphites'
+    df[var] = 0
+    for species in hypophosphites:
+      try:
+        df[species]
+        df[var] = df[var] + df[species]
+      except:
+        continue
+    return df, var
+
+
+def _get_carbonates(df, show):
     carbonates_mbn=['ARAGONITE', 'ARTINITE','AZURITE','CALCITE','CERUSSITE',
                 'DOLOMITE', 'DOLOMITE,DISORDERED','DOLOMITE,ORDERED',
                 'HUNTITE','HYDROMAGNESITE','MAGNESITE','MALACHITE',
@@ -503,17 +874,18 @@ def _get_carbonates(df):
     carbonates_ypf=['Siderite','Hydromagnesite','Artinite','Nesquehonite','Calcite',
                 'Magnesite','Aragonite','Huntite','Dolomite']
     carbonates = carbonates_mbn + carbonates_ypf
-    #add the suffix for consistency
+    #add the mineral suffix for consistency
     carbonates = [x+'_out' for x in carbonates]
+    var = 'Carbonates'
     #create carbonates column
-    df['carbonates_out'] = 0
+    df[var] = 0
     for solid in carbonates:
       try:
         df[solid]
-        df['carbonates_out'] = df['carbonates_out'] + df[solid]
+        df[var] = df[var] + df[solid]
       except:
         continue
-    return df
+    return df, var
 
 def _get_and_plot_literature_pH(cwdpath,Doit):
   if Doit:
@@ -583,7 +955,7 @@ def _assign_colors(df,dfm,visualize):
   color_index = [int(x) for x in color_index]
   colors=colors[color_index]
   return colors
-
+  
 def __manual_colorwheel(visualize=False):
   colors = np.array([
     [0.83921569, 0.15294118, 0.15686275, 1.0],  #reddish
@@ -621,3 +993,20 @@ def __manual_colorwheel(visualize=False):
       ax.fill_between([angles[i], angles[i + 1]], 0, 1, color=color)
   plt.show()  
   return colors
+
+
+def _get_custom_cmap_ternary(df):
+  # Choose 10 distinct blues with higher contrast
+  blues = ['#08306b', '#08519c', '#2171b5', '#4292c6', '#6baed6', '#9ecae1', '#c6dbef', '#deebf7', '#f7fbff', '#eff3ff']
+  cmap_low = ListedColormap(blues)
+  # Choose 10 distinct reds with higher contrast
+  reds = ['#67000d', '#a50f15', '#cb181d', '#ef3b2c', '#fb6a4a', '#fc9272', '#fcbba1', '#fee0d2', '#fff5f0', '#fff5f0']
+  cmap_high = ListedColormap(reds)
+  # Combine the two colormaps into a diverging colormap
+  cmap = ListedColormap(list(blues) + list(reds))
+  # Set the range for the colormap
+  vmin, vmax = df.min(), df.max()
+  midpoint = 1
+  # Create a diverging normalization
+  norm = LogNorm(vmin=vmin, vcenter=midpoint, vmax=vmax)
+  return cmap, norm

@@ -1,0 +1,583 @@
+                    Xi=  1.00000E-14
+                Log Xi=    -14.00000
+
+
+ Temperature= 300.00 C
+
+ Pressure=   500.00     bars
+
+
+ Exhaustion of the following reactant(s):
+     IDEAL OLIVINE
+     ORTHOPYROXENE
+     CHLORAPATITE
+
+
+                     --- Reactant Summary ---
+
+
+
+     Reactant                  Moles     Delta moles    Mass, g    Delta mass, g
+
+  IDEAL OLIVINE              0.0000E+00   6.7210E+00   0.0000E+00   9.8799E+02
+  ORTHOPYROXENE              0.0000E+00   9.6899E-02   0.0000E+00   1.0033E+01
+  CLINOPYROXENE              0.0000E+00   0.0000E+00   0.0000E+00   0.0000E+00
+  CHLORAPATITE               0.0000E+00   2.1500E-03   0.0000E+00   1.1196E+00
+
+
+                    Mass remaining=  0.0000E+00 grams
+                    Mass destroyed=  9.9915E+02 grams
+
+
+     Reactant                   Affinity     Rel. Rate
+                                kcal/mol      mol/mol
+
+  IDEAL OLIVINE                    0.2409   6.7210E+00
+  ORTHOPYROXENE                    3.2045   9.6899E-02
+  CLINOPYROXENE                   10.6994   0.0000E+00
+  CHLORAPATITE                     4.5650   2.1500E-03
+
+
+   Affinity of the overall irreversible reaction= 1.9394 kcal.
+   Contributions from irreversible reactions with no thermodynamic data
+   are not included.
+
+
+           --- Elemental Composition of the Aqueous Solution ---
+
+   Element      mg/kg.sol    Molality
+
+     O         6.70545E+05  5.55454E+01
+     Ca        3.18953E+03  1.05474E-01
+     Cl        1.46541E+05  5.47813E+00
+     Fe        1.20198E+02  2.85248E-03
+     H         8.98295E+04  1.18116E+02
+     C         2.15609E+02  2.37909E-02
+     P         1.79681E-04  7.68837E-09
+     K         2.99050E+03  1.01370E-01
+     Mg        3.31333E+03  1.80673E-01
+     Na        8.32553E+04  4.79956E+00
+     Si        3.19230E-01  1.50642E-05
+
+
+           --- Numerical Composition of the Aqueous Solution ---
+
+   Species                  mg/kg.sol    Molality
+
+ H2O                       8.02460E+05  5.90345E+01
+ Ca+2                      3.18953E+03  1.05474E-01
+ Cl-                       1.46541E+05  5.47813E+00
+ Fe+2                      1.20198E+02  2.85248E-03
+ H+                        1.74925E+01  2.30007E-02
+ HCO3-                     1.09532E+03  2.37909E-02
+ HPO4-2                    5.56785E-04  7.68837E-09
+ K+                        2.99050E+03  1.01370E-01
+ Mg+2                      3.31333E+03  1.80673E-01
+ Na+                       8.32553E+04  4.79956E+00
+ SiO2,AQ                   6.82940E-01  1.50642E-05
+ O2(g)                    -4.29831E+04 -1.78028E+00
+
+   Some of the above data may not be physically significant.
+
+
+           --- Sensible Composition of the Aqueous Solution ---
+
+   Species                  mg/kg.sol    Molality
+
+ Ca+2                      3.18953E+03  1.05474E-01
+ Cl-                       1.46541E+05  5.47813E+00
+ Fe+2                      1.20198E+02  2.85248E-03
+ H+                        1.74925E+01  2.30007E-02
+ HCO3-                     1.09532E+03  2.37909E-02
+ HPO4-2                    5.56785E-04  7.68837E-09
+ K+                        2.99050E+03  1.01370E-01
+ Mg+2                      3.31333E+03  1.80673E-01
+ Na+                       8.32553E+04  4.79956E+00
+ SiO2,AQ                   6.82940E-01  1.50642E-05
+
+   The above data have physical significance, but some may be
+   inconsistent with certain analytical methods or reporting schemes.
+
+
+           --- The pH, Eh, pe-, and Ah on various pH scales ---
+
+                               pH     Eh, volts        pe-       Ah, kcal
+
+ NBS pH scale                5.3185    -0.5974    -5.2537E+00    -13.7785
+ Mesmer pH (pmH) scale       5.0153    -0.5630    -4.9505E+00    -12.9833
+
+
+     pHCl=      5.4033
+
+
+   The single ion activities and activity coefficients listed below
+   are consistent with the NBS pH scale.
+
+
+
+                    Oxygen fugacity= 3.87694E-43 bars
+                Log oxygen fugacity= -42.412
+
+                  Activity of water= 0.82619
+              Log activity of water= -8.29210E-02
+
+             Mole fraction of water= 0.82981
+         Log mole fraction of water= -8.10213E-02
+
+      Activity coefficient of water= 0.99564
+  Log activity coefficient of water= -1.89979E-03
+
+                Osmotic coefficient= 0.93095
+ Stoichiometric osmotic coefficient= 0.98913
+
+                  Sum of molalities= 11.384
+   Sum of stoichiometric molalities= 10.715
+
+                 Ionic strength (I)= 2.6406 molal
+      Stoichiometric ionic strength= 5.7909 molal
+
+                Ionic asymmetry (J)= 1.84860E-02 molal
+     Stoichiometric ionic asymmetry= 0.28900 molal
+
+                       Solvent mass= 19.335 g
+                 Solutes (TDS) mass= 6.2903 g
+              Aqueous solution mass= 25.625 g
+
+                   Solvent fraction= 0.75453 kg.H2O/kg.sol
+                    Solute fraction= 0.24547 kg.tds/kg.sol
+
+      Total dissolved solutes (TDS)= 2.45470E+05 mg/kg.sol
+
+
+
+           --- More Precise Aqueous Phase Masses ---
+
+                       Solvent mass= 19.335123 g
+                 Solutes (TDS) mass= 6.2902721 g
+              Aqueous solution mass= 25.625395 g
+
+
+
+
+      Alkalinity is not defined at 300.000 C.
+      It is only defined in the temperature range 0-50 C.
+
+
+
+        --- Aqueous Solution Charge Balance ---
+
+          Actual Charge imbalance= -1.0333E-10 eq
+        Expected Charge imbalance=  1.3926E-10 eq
+               Charge discrepancy= -2.4259E-10 eq
+              Sigma |equivalents|=  1.0140E-01 eq
+
+          Actual Charge imbalance= -4.0324E-09 eq/kg.solu
+        Expected Charge imbalance=  1.0507E-10 eq/kg.solu
+               Charge discrepancy= -1.8304E-10 eq/kg.solu
+              Sigma |equivalents|=  7.6507E-02 eq/kg.solu
+
+      Relative charge discrepancy= -2.3925E-09
+
+
+                --- Distribution of Aqueous Solute Species ---
+
+    Species                  Molality    Log Molality   Log Gamma  Log Activity
+
+ H2,AQ                      3.5490E+00       0.5501       0.3211       0.8712
+ Cl-                        2.6220E+00       0.4186      -0.5034      -0.0848
+ NaCl,AQ                    2.5460E+00       0.4059       0.0000       0.4059
+ Na+                        2.2536E+00       0.3529      -0.5358      -0.1829
+ MgCl+                      1.6669E-01      -0.7781      -0.5358      -1.3139
+ K+                         8.5318E-02      -1.0690      -0.6431      -1.7121
+ CaCl+                      7.8404E-02      -1.1057      -0.5358      -1.6415
+ CaCl2,AQ                   2.1908E-02      -1.6594       0.0000      -1.6594
+ KCl,AQ                     1.6052E-02      -1.7945       0.0000      -1.7945
+ Mg+2                       1.3359E-02      -1.8742      -1.2621      -3.1363
+ CO2,AQ                     1.1880E-02      -1.9252       0.3211      -1.6041
+ CO,AQ                      1.1508E-02      -1.9390       0.0000      -1.9390
+ Ca+2                       5.0816E-03      -2.2940      -1.5648      -3.8588
+ FeCl2,AQ                   2.3869E-03      -2.6222       0.0000      -2.6222
+ FeCl+                      4.0931E-04      -3.3879      -0.5358      -3.9237
+ MgOH+                      3.7763E-04      -3.4229      -0.5358      -3.9587
+ Mg(HCO3)+                  2.4730E-04      -3.6068      -0.5358      -4.1426
+ HCO3-                      9.9025E-05      -4.0043      -0.3961      -4.4004
+ Ca(HCO3)+                  5.6253E-05      -4.2499      -0.5358      -4.7857
+ Fe+2                       4.5699E-05      -4.3401      -1.5648      -5.9049
+ HCl,AQ                     2.6439E-05      -4.5778       0.0000      -4.5778
+ CaOH+                      2.3927E-05      -4.6211      -0.5358      -5.1569
+ SiO2,AQ                    1.5034E-05      -4.8229       0.0000      -4.8229
+ FeOH+                      1.0025E-05      -4.9989      -0.5358      -5.5347
+ H+                         9.6538E-06      -5.0153      -0.3032      -5.3185
+ OH-                        6.6660E-06      -5.1761      -0.5034      -5.6795
+ NaOH,AQ                    3.9414E-06      -5.4044       0.0000      -5.4044
+ FeO,AQ                     5.2080E-07      -6.2833       0.0000      -6.2833
+ KOH,AQ                     1.9416E-07      -6.7118       0.0000      -6.7118
+ Ca(CO3),AQ                 5.6837E-08      -7.2454       0.0000      -7.2454
+ Mg(CO3),AQ                 2.4997E-08      -7.6021       0.0000      -7.6021
+ NaHSiO3,AQ                 1.7576E-08      -7.7551       0.0000      -7.7551
+ HFeO2-                     1.4435E-08      -7.8406      -0.3961      -8.2367
+ HSiO3-                     5.3624E-09      -8.2706      -0.3961      -8.6667
+ Mg(HSiO3)+                 5.2318E-09      -8.2813      -0.5358      -8.8172
+ H2PO4-                     4.9518E-09      -8.3052      -0.3961      -8.7013
+ CO3-2                      2.6574E-09      -8.5755      -1.5056     -10.0811
+ H2PO3-                     2.3563E-09      -8.6278      -0.5034      -9.1312
+ Ca(HSiO3)+                 1.7066E-09      -8.7679      -0.5358      -9.3037
+ HPO3-2                     2.1735E-10      -9.6628      -1.8046     -11.4674
+ HFeO2,AQ                   1.4376E-10      -9.8423       0.0000      -9.8423
+ HPO4-2                     8.3560E-11     -10.0780      -1.8046     -11.8826
+ FeO2-                      8.3005E-11     -10.0809      -0.3961     -10.4770
+ H3PO4,AQ                   7.5961E-11     -10.1194       0.0000     -10.1194
+ H3PO3,AQ                   3.4295E-12     -11.4648       0.0000     -11.4648
+ FeO+                       2.9272E-12     -11.5335      -0.5358     -12.0693
+ H2P2O7-2                   9.2308E-15     -14.0348      -1.8046     -15.8393
+ FeOH+2                     7.8765E-15     -14.1037      -2.0840     -16.1876
+ HP2O7-3                    5.3342E-15     -14.2729      -4.1986     -18.4715
+ PO4-3                      2.9178E-16     -15.5349      -4.1986     -19.7335
+ P2O7-4                     7.0965E-17     -16.1490      -9.2949     -25.4439
+ H2PO2-                     4.0018E-17     -16.3977      -0.5034     -16.9011
+ FeCl+2                     1.1229E-17     -16.9497      -2.0840     -19.0336
+ H3P2O7-                    3.6745E-18     -17.4348      -0.3961     -17.8309
+ H3PO2,AQ                   8.9560E-20     -19.0479       0.0000     -19.0479
+ Fe+3                       8.0223E-21     -20.0957      -2.5243     -22.6200
+ H4P2O7,AQ                  7.5083E-21     -20.1245       0.0000     -20.1245
+ HClO,AQ                    4.1101E-31     -30.3861       0.0000     -30.3861
+ H2O2,AQ                    1.4710E-32     -31.8324       0.0000     -31.8324
+ ClO-                       5.0363E-33     -32.2979      -0.3961     -32.6940
+ HO2-                       2.0508E-37     -36.6881      -0.3961     -37.0842
+ O2,AQ                      5.0204E-46     -45.2993       0.3211     -44.9782
+ ClO2-                      3.3496E-60     -59.4750      -0.3961     -59.8711
+ ClO3-                      3.9008E-80     -79.4088      -0.3961     -79.8049
+
+    Species with molalities less than  1.000-100 are not listed.
+
+
+
+      --- Major Species by Contribution to Aqueous Mass Balances ---
+
+
+ Species Accounting for 99% or More of Aqueous Ca+2
+
+     Species                   Factor    Molality     Per Cent
+
+   CaCl+                        1.00    7.8404E-02     74.33
+   CaCl2,AQ                     1.00    2.1908E-02     20.77
+   Ca+2                         1.00    5.0816E-03      4.82
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             1.0539E-01     99.92
+
+
+ Species Accounting for 99% or More of Aqueous Cl-
+
+     Species                   Factor    Molality     Per Cent
+
+   Cl-                          1.00    2.6220E+00     47.86
+   NaCl,AQ                      1.00    2.5460E+00     46.48
+   MgCl+                        1.00    1.6669E-01      3.04
+   CaCl+                        1.00    7.8404E-02      1.43
+   CaCl2,AQ                     2.00    2.1908E-02    7.998E-01
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             5.4569E+00     99.61
+
+
+ Species Accounting for 99% or More of Aqueous Fe+2
+
+     Species                   Factor    Molality     Per Cent
+
+   FeCl2,AQ                     1.00    2.3869E-03     83.68
+   FeCl+                        1.00    4.0931E-04     14.35
+   Fe+2                         1.00    4.5699E-05      1.60
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             2.8419E-03     99.63
+
+
+ Species Accounting for 99% or More of Aqueous HCO3-
+
+     Species                   Factor    Molality     Per Cent
+
+   CO2,AQ                       1.00    1.1880E-02     49.94
+   CO,AQ                        1.00    1.1508E-02     48.37
+   Mg(HCO3)+                    1.00    2.4730E-04      1.04
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             2.3636E-02     99.35
+
+
+ Species Accounting for 99% or More of Aqueous HPO4-2
+
+     Species                   Factor    Molality     Per Cent
+
+   H2PO4-                       1.00    4.9518E-09     64.41
+   H2PO3-                       1.00    2.3563E-09     30.65
+   HPO3-2                       1.00    2.1735E-10      2.83
+   HPO4-2                       1.00    8.3560E-11      1.09
+   H3PO4,AQ                     1.00    7.5961E-11    9.880E-01
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             7.6849E-09     99.96
+
+
+ Species Accounting for 99% or More of Aqueous K+
+
+     Species                   Factor    Molality     Per Cent
+
+   K+                           1.00    8.5318E-02     84.16
+   KCl,AQ                       1.00    1.6052E-02     15.84
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             1.0137E-01    100.00
+
+
+ Species Accounting for 99% or More of Aqueous Mg+2
+
+     Species                   Factor    Molality     Per Cent
+
+   MgCl+                        1.00    1.6669E-01     92.26
+   Mg+2                         1.00    1.3359E-02      7.39
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             1.8005E-01     99.65
+
+
+ Species Accounting for 99% or More of Aqueous Na+
+
+     Species                   Factor    Molality     Per Cent
+
+   NaCl,AQ                      1.00    2.5460E+00     53.05
+   Na+                          1.00    2.2536E+00     46.95
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             4.7996E+00    100.00
+
+
+ Species Accounting for 99% or More of Aqueous SiO2,AQ
+
+     Species                   Factor    Molality     Per Cent
+
+   SiO2,AQ                      1.00    1.5034E-05     99.80
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+   Subtotal                             1.5034E-05     99.80
+
+
+
+                --- Aqueous Redox Reactions ---
+
+   Couple                           Eh, volts      pe-      log fO2   Ah, kcal
+
+ DEFAULT                             -0.597   -5.2537E+00   -42.412   -13.779
+
+    Couples required to satisfy the default redox constraint are not listed.
+
+
+
+                     --- Summary of Solid Phases (ES) ---
+
+   Phase/End-member            Log moles     Moles        Grams     Volume, cm3
+
+ IRON                            -1.5728   2.6743E-02   1.4935E+00   0.0000E+00
+ HYDROXYAPATITE                  -2.6675   2.1501E-03   1.0800E+00   0.0000E+00
+
+ SERPENTINE                       0.5387   3.4567E+00   9.8910E+02   0.0000E+00
+   CHRYSOTILE                     0.4990   3.1551E+00   8.7433E+02   0.0000E+00
+   GREENALITE                    -0.6861   2.0603E-01   7.6589E+01   0.0000E+00
+   CRONSTEDTITE,7A               -1.0196   9.5587E-02   3.8187E+01   0.0000E+00
+
+ BRUCITE-SS                       0.4840   3.0477E+00   1.8804E+02   0.0000E+00
+   BRUCITE                        0.4347   2.7210E+00   1.5869E+02   0.0000E+00
+   FE-BRUCITE                    -0.4859   3.2665E-01   2.9353E+01   0.0000E+00
+
+
+            --- Grand Summary of Solid Phases (ES + PRS + Reactants) ---
+
+   Phase/End-member            Log moles     Moles        Grams     Volume, cm3
+
+ IRON                            -1.5728   2.6743E-02   1.4935E+00   0.0000E+00
+ HYDROXYAPATITE                  -2.6675   2.1501E-03   1.0800E+00   0.0000E+00
+ CHLORAPATITE                -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+
+ SERPENTINE                       0.5387   3.4567E+00   9.8910E+02   0.0000E+00
+   CHRYSOTILE                     0.4990   3.1551E+00   8.7433E+02   0.0000E+00
+   GREENALITE                    -0.6861   2.0603E-01   7.6589E+01   0.0000E+00
+   CRONSTEDTITE,7A               -1.0196   9.5587E-02   3.8187E+01   0.0000E+00
+
+ BRUCITE-SS                       0.4840   3.0477E+00   1.8804E+02   0.0000E+00
+   BRUCITE                        0.4347   2.7210E+00   1.5869E+02   0.0000E+00
+   FE-BRUCITE                    -0.4859   3.2665E-01   2.9353E+01   0.0000E+00
+
+ IDEAL OLIVINE               -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   FAYALITE                  -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   FORSTERITE                -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+
+ ORTHOPYROXENE               -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   ENSTATITE                 -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   FERROSILITE               -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+
+ CLINOPYROXENE               -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   DIOPSIDE                  -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+   HEDENBERGITE              -99999.0000   0.0000E+00   0.0000E+00   0.0000E+00
+
+
+                          Mass, grams       Volume, cm3
+
+           Created         1.17972E+03       0.00000E+00
+           Destroyed       9.99147E+02       0.00000E+00
+           Net             1.80573E+02       0.00000E+00
+
+          These volume totals may be incomplete because of missing
+          partial molar volume data in the data base.
+
+
+
+      --- Saturation States of Aqueous Reactions Not Fixed at Equilibrium ---
+
+   Reaction                           Log Q/K    Affinity, kcal
+
+ None
+
+
+
+           --- Saturation States of Pure Solids ---
+
+       Phase                      Log Q/K    Affinity, kcal
+
+     ANTIGORITE                    0.69054      1.81103     SSATD
+     ARAGONITE                    -1.37293     -3.60071
+     ARTINITE                     -3.79777     -9.96017
+     BRUCITE                      -0.04924     -0.12913
+     GRAPHITE                      6.86935     18.01583     SSATD
+     CALCITE                      -1.21744     -3.19292
+     CHALCEDONY                   -3.01759     -7.91406
+     CHRYSOTILE                   -0.11895     -0.31197
+     COESITE                      -3.32247     -8.71366
+     CRISTOBALITE                 -3.11510     -8.16979
+     CRISTOBALITE,ALPHA           -3.12180     -8.18737
+     CRISTOBALITE,BETA            -3.27947     -8.60088
+     DOLOMITE                     -0.05449     -0.14290
+     DOLOMITE-DIS                 -0.56909     -1.49251
+     DOLOMITE-ORD                 -0.05377     -0.14101
+     ENSTATITE                    -1.28768     -3.37712
+     FAYALITE                     -1.16136     -3.04584
+     FERROUS-OXIDE                 0.04756      0.12472     SSATD
+     FERROSILITE                  -2.04150     -5.35411
+     FORSTERITE                   -0.28675     -0.75205
+     GOETHITE                     -1.74011     -4.56369
+     HALITE                       -1.06689     -2.79806
+     HEMATITE                     -2.47159     -6.48210
+     HUNTITE                      -0.61842     -1.62189
+     IRON                         -0.00000     -0.00000     SATD
+     MAGNESITE                     0.39327      1.03140     SSATD
+     MAGNETITE                    -0.85508     -2.24256
+     MONTICELLITE                 -3.33029     -8.73415
+     PERICLASE                    -1.52221     -3.99222
+     QUARTZ                       -2.87875     -7.54993
+     AMORPHOUS-SILICA             -3.31334     -8.68971
+     SIDERITE                     -0.73476     -1.92700
+     SYLVITE                      -2.71840     -7.12938
+     GREENALITE                   -3.67421     -9.63614
+     FE-BRUCITE                   -0.96989     -2.54367
+     LEPIDOCROCITE                -2.51882     -6.60595
+     FERRIHYDRITE*0H2O            -3.77915     -9.91134
+     FERRIHYDRITE                 -2.96729     -7.78213
+     FERRIHYDRITE*1H2O            -3.42603     -8.98523
+     MAGHEMITE                    -3.50608     -9.19517
+     HYDROXYAPATITE               -0.00000     -0.00000     SATD
+     CHLORAPATITE                 -1.74061     -4.56500
+
+        Phases with affinities less than -10 kcal are not listed.
+
+
+
+           --- Saturation States of Pure Liquids ---
+
+       Phase                      Log Q/K    Affinity, kcal
+
+     H2O                          -0.08292     -0.21747
+
+        Phases with affinities less than -10 kcal are not listed.
+
+
+
+           --- Saturation States of Solid Solutions ---
+
+       Phase                      Log Q/K    Affinity, kcal
+
+     SERPENTINE                   -0.00000     -0.00000     SATD
+     BRUCITE-SS                   -0.00000     -0.00000     SATD
+     TALC-SS                      -3.77733     -9.90657
+     CARBONATE-CALCITE            -1.55893     -4.08851
+     OLIVINE                      -1.44812     -3.79789
+     IDEAL OLIVINE                -0.01627     -0.04268
+     ORTHOPYROXENE                -1.21717     -3.19220
+
+        Phases with affinities less than -10 kcal are not listed.
+
+
+           --- Summary of Saturated and Supersaturated Phases ---
+
+                There are    4 saturated phases.
+                There are    4 supersaturated phases.
+
+
+
+           --- Solid Solution Product Phases ---
+
+
+                --- SERPENTINE ---
+
+   Ideal solution
+
+    Component                    x           Log x   Log lambda  Log activity
+
+ CHRYSOTILE                  9.1275E-01     -0.0397     -0.0793     -0.1190
+ GREENALITE                  5.9602E-02     -1.2247     -2.4495     -3.6742
+ CRONSTEDTITE,7A             2.7652E-02     -1.5583     -3.1165     -4.6748
+
+
+    Mineral                       Log Q/K         Aff, kcal    State
+
+ SERPENTINE                         -0.0000         -0.0000   SATD
+   CHRYSOTILE                       -0.0000         -0.0000   SATD
+   GREENALITE                       -0.0000         -0.0000   SATD
+   CRONSTEDTITE,7A                  -0.0000         -0.0000   SATD
+
+
+                --- BRUCITE-SS ---
+
+   Ideal solution
+
+    Component                    x           Log x   Log lambda  Log activity
+
+ BRUCITE                     8.9282E-01     -0.0492     -0.0000     -0.0492
+ FE-BRUCITE                  1.0718E-01     -0.9699     -0.0000     -0.9699
+
+
+    Mineral                       Log Q/K         Aff, kcal    State
+
+ BRUCITE-SS                         -0.0000         -0.0000   SATD
+   BRUCITE                          -0.0000         -0.0000   SATD
+   FE-BRUCITE                       -0.0000         -0.0000   SATD
+
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+   Each reactant is now saturated or exhausted.
+
+ ---  The reaction path has terminated normally ---
+
+
+           1 steps were taken
+       Xi increased from 
+               0.00000E+00 to  1.00000E-14
+       The average value of delxi was  1.00000E-14
+       The average matrix dimension was   19
+
+       The pH increased from 5.3185 to 5.3185
+       The Eh decreased from -0.5974 to -0.5974 v
+       The log fO2 decreased from -42.4115 to -42.4115
+       The aw increased from 0.8262 to 0.8262
+       The mass of solvent water increased from 1.93351E-02 to 1.93351E-02 kg
+
+ No further input found.
+
+          Start time = 18:40:21  03Mar2025
+            End time = 18:40:21  03Mar2025
+
+           Run time =  0.391E-01 seconds
+
+ Normal exit

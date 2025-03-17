@@ -132,7 +132,7 @@ def edit_in6i(string,newval,path,element,filename):
             newline = line[0:28]+newval+line[39:]
          elif element == 'dxixi':
             newval = '%.5E'%float(newval)
-            newline = line[0:33]+newval+line[45:]
+            newline = line[0:34]+newval+line[45:]
          elif element == 'co2gas':
             newval = '%.6E'%newval
             newline = line[0:27]+newval+line[39:]
