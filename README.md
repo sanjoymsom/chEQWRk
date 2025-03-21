@@ -17,6 +17,7 @@ Important            : Study-specific .py files are in study_files/ including st
 # VERSION MAPPING
 
 v0.1.1 --> Som et al. 2024, Planetary Science Journal. DOI 10.3847/PSJ/ad42a1
+
 v0.2.0 --> Boden et al. 2025, Geobiology. Accepted.
                                                                       
 
