@@ -17,7 +17,7 @@ Important            : Study-specific .py files are in study_files/ including st
 # VERSION MAPPING
 
 v0.1.1 --> Som et al. 2024, Planetary Science Journal. DOI 10.3847/PSJ/ad42a1
-v0.2.0 --> Boden et al. 2025, Geobiology. DOI 
+v0.2.0 --> Boden et al. 2025, Geobiology. Accepted.
                                                                       
 
 # DEPENDENCIES                                                        
@@ -42,10 +42,10 @@ The code is launched by typing in the terminal: python3 executor.py
                                                                       
 # INITIAL CONSIDERATIONS                                              
 
-1. If you're simulating water:rock reactions, do you allow cabonates? If so, put a star in front of SIDERITE, HYDROMAGNESITE, ARTINITE, NESQUEHONITE, CALCITE, Calcite-SS, MAGNESITE, ARAGONITE, HUNTITE, DOLOMITE,ORDERED, DOLOMITE,DISORDERED, DOLOMITE in the 3i file     
-   located in the input_files/ folder (this example assumes use of the mbn database).                                                     
-2. It's a good habit to clear everything (option 0) before running a set of computations. You can save your results at any time and load those saved files. Saved files are stored in the /saved_files folder.                                 
-3. Feel free to mess with the source code to improve things. If you screw up and need to revert, the original .py files are also saved in /python_backup of the release corresponding to the manuscript.              .           
+1. If you're simulating water:rock reactions, do you allow cabonates? If not, ensure you suppress the relevant database minerals in the 3i file located in the input_files/ folder.
+   from the mbn database, those are:  SIDERITE, HYDROMAGNESITE, ARTINITE, NESQUEHONITE, CALCITE, Calcite-SS, MAGNESITE, ARAGONITE, HUNTITE, DOLOMITE,ORDERED, DOLOMITE,DISORDERED, DOLOMITE in the 3i file                                                    
+3. It's a good habit to clear everything (option 0) before running a set of computations. You can save your results at any time and load those saved files. Saved files are stored in the /saved_files folder.                                 
+4. Feel free to mess with the source code to improve things. If you screw up and need to revert, the original .py files are also saved in /python_backup of the release corresponding to the manuscript.              .           
                                                                       
 
 # START A NEW STUDY                                                  
